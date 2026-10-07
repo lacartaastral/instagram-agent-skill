@@ -13,7 +13,7 @@ EXPECTED = {
 
 
 class ContractTests(unittest.TestCase):
-    def test_all_skills_have_unique_openclaw_frontmatter(self):
+    def test_todas_las_skills_tienen_frontmatter_openclaw_unico(self):
         files = sorted(SKILLS.glob("*/SKILL.md"))
         self.assertEqual({path.parent.name for path in files}, EXPECTED)
         names = []
@@ -22,11 +22,20 @@ class ContractTests(unittest.TestCase):
             match = re.search(r"(?m)^name:\s*([a-z0-9-]+)\s*$", text)
             self.assertIsNotNone(match, path)
             names.append(match.group(1))
-            self.assertIn("## OpenClaw contract", text)
+            self.assertIn("## Contrato de OpenClaw", text)
         self.assertEqual(len(names), len(set(names)))
 
-    def test_no_upstream_assistant_paths_remain(self):
-        forbidden = ("~/" + ".claude", "." + "claude-plugin", "." + "claude/skills")
+    def test_no_quedan_rutas_del_sistema_de_origen(self):
+        # Se construyen los marcadores para que el propio test no reintroduzca
+        # literalmente las rutas que está comprobando.
+        legacy_vendor = "".join(("cl", "aude"))
+        legacy_api_vendor = "".join(("anth", "ropic"))
+        forbidden = (
+            f"~/.{legacy_vendor}",
+            f".{legacy_vendor}-plugin",
+            f".{legacy_vendor}/skills",
+            legacy_api_vendor,
+        )
         for path in ROOT.rglob("*"):
             if not path.is_file() or ".git" in path.parts:
                 continue
@@ -35,9 +44,9 @@ class ContractTests(unittest.TestCase):
             except UnicodeDecodeError:
                 continue
             for marker in forbidden:
-                self.assertNotIn(marker, text, f"{marker} in {path}")
+                self.assertNotIn(marker, text, f"{marker} en {path}")
 
-    def test_json_contracts_are_valid(self):
+    def test_los_contratos_json_son_validos(self):
         for path in (ROOT / "config").glob("*.json"):
             with self.subTest(path=path):
                 json.loads(path.read_text(encoding="utf-8"))

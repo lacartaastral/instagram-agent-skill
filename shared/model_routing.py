@@ -1,8 +1,9 @@
-"""Deterministic model-routing policy for the Instagram skill pack.
+"""Política determinista de enrutamiento de modelos para Instagram.
 
-This module never changes OpenClaw configuration and never calls a model.  The
-caller supplies the runtime allowlist observed from OpenClaw.  Quality/deep
-routes fail closed when their explicitly configured model is unavailable.
+Este módulo nunca cambia la configuración de OpenClaw ni llama a un modelo. El
+caller proporciona la allowlist observada en tiempo de ejecución. Las rutas de
+calidad y profundas fallan cerrado cuando el modelo configurado explícitamente
+no está disponible.
 """
 from __future__ import annotations
 
@@ -42,7 +43,7 @@ def normalize_tier(tier: int | str) -> int:
         tier = int(value)
     tier = int(tier)
     if tier not in TIER_NAMES:
-        raise ValueError(f"unsupported model tier: {tier}")
+        raise ValueError(f"tier de modelo no admitido: {tier}")
     return tier
 
 
@@ -54,26 +55,26 @@ def decide(
     quality_model: str | None = None,
     deep_model: str | None = None,
 ) -> RouteDecision:
-    """Resolve one route against the allowlist supplied by the runtime."""
+    """Resuelve una ruta contra la allowlist proporcionada por el runtime."""
     number = normalize_tier(tier)
     label = TIER_NAMES[number]
     allowed = _allowed(allowed_models)
     if number == 0:
         return RouteDecision(number, label, True, None, False, "ready",
-                             "local deterministic work; no model call")
+                             "trabajo local determinista; no se llama a ningún modelo")
 
     candidate = {1: default_model, 2: quality_model, 3: deep_model}[number]
     if not candidate:
         return RouteDecision(number, label, False, None, True, "blocked",
-                             f"no explicit {label.lower()} model is configured")
+                             f"no hay un modelo explícito configurado para {label.lower()}")
     if candidate not in allowed:
         return RouteDecision(number, label, False, candidate, True, "blocked",
-                             f"model {candidate!r} is not in the runtime allowlist")
+                             f"el modelo {candidate!r} no está en la allowlist del runtime")
     if number == 1:
         return RouteDecision(number, label, False, candidate, False, "ready",
-                             "use the authorized default model for routine editorial work")
+                             "usar el modelo autorizado por defecto para trabajo editorial rutinario")
     return RouteDecision(number, label, False, candidate, True, "ready",
-                         "delegate explicitly through native OpenClaw subagent routing")
+                         "delegar explícitamente mediante el routing nativo de subagentes de OpenClaw")
 
 
 def load_policy(path: str | Path) -> dict[str, Any]:
@@ -95,11 +96,11 @@ def decide_from_policy(policy: dict[str, Any], tier: int | str,
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Resolve an Instagram model route without calling a model.")
-    parser.add_argument("tier", help="0-3 or deterministic/routine/quality/deep")
-    parser.add_argument("--policy", required=True)
+    parser = argparse.ArgumentParser(description="Resolver una ruta de modelo de Instagram sin llamar a ningún modelo.")
+    parser.add_argument("tier", help="0-3 o deterministic/routine/quality/deep")
+    parser.add_argument("--policy", required=True, help="ruta al JSON de política")
     parser.add_argument("--allowed", nargs="*", default=None,
-                        help="runtime allowlist; defaults to the policy snapshot")
+                        help="allowlist del runtime; por defecto usa la instantánea de la política")
     args = parser.parse_args()
     policy = load_policy(args.policy)
     decision = decide_from_policy(policy, args.tier,

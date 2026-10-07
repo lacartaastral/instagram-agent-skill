@@ -1,10 +1,9 @@
-"""Safe, profile-scoped storage for the OpenClaw Instagram skill pack.
+"""Almacenamiento seguro y aislado por perfil para el paquete de Instagram.
 
-State is deliberately outside the package.  Every profile and voice component
-is validated before a path is resolved, and writes are atomic.  The module does
-not accept an arbitrary path as a substitute for the OpenClaw workspace:
-callers provide the effective workspace explicitly or through the documented
-environment variable.
+El estado vive deliberadamente fuera del paquete. Cada perfil y cada speaker se
+validan antes de resolver una ruta, y las escrituras son atómicas. El módulo no
+acepta una ruta arbitraria como sustituto del workspace de OpenClaw: quien lo
+llama debe proporcionar el workspace efectivo o usar la variable documentada.
 """
 from __future__ import annotations
 
@@ -33,13 +32,13 @@ DEFAULT_STATE_RELATIVE = Path("state") / "instagram-agent"
 
 
 class StorageError(ValueError):
-    """Raised when a profile/voice or resolved path is unsafe."""
+    """Error cuando un perfil, speaker o ruta resultante no es seguro."""
 
 
 def _component(value: str, pattern: re.Pattern[str], label: str) -> str:
     candidate = str(value).strip().lower()
     if not pattern.fullmatch(candidate):
-        raise StorageError(f"invalid {label}: {value!r}")
+        raise StorageError(f"{label} no válido: {value!r}")
     return candidate
 
 
@@ -49,7 +48,7 @@ def _inside(root: Path, candidate: Path) -> Path:
     try:
         candidate_resolved.relative_to(root_resolved)
     except ValueError as exc:
-        raise StorageError(f"path escapes storage root: {candidate}") from exc
+        raise StorageError(f"la ruta sale de la raíz de almacenamiento: {candidate}") from exc
     return candidate_resolved
 
 
@@ -69,18 +68,18 @@ class InstagramStorage:
     def from_environment(cls, workspace: str | Path | None = None) -> "InstagramStorage":
         value = workspace or os.environ.get("OPENCLAW_WORKSPACE") or os.environ.get("OPENCLAW_AGENT_WORKSPACE")
         if not value:
-            raise StorageError("effective OpenClaw workspace is required")
+            raise StorageError("se necesita el workspace efectivo de OpenClaw")
         return cls(Path(value))
 
     def profile_dir(self, profile: str) -> Path:
-        name = _component(profile, PROFILE_PATTERN, "profile")
+        name = _component(profile, PROFILE_PATTERN, "perfil")
         return _inside(self.state_root, self.state_root / "profiles" / name)
 
     def profile_file(self, profile: str, file_key: str) -> Path:
         try:
             filename = PROFILE_FILES[file_key]
         except KeyError as exc:
-            raise StorageError(f"unsupported profile file: {file_key!r}") from exc
+            raise StorageError(f"archivo de perfil no admitido: {file_key!r}") from exc
         return _inside(self.profile_dir(profile), self.profile_dir(profile) / filename)
 
     def voice_file(self, profile: str, speaker: str) -> Path:
@@ -93,6 +92,14 @@ class InstagramStorage:
         directory.mkdir(parents=True, exist_ok=True)
         (directory / "voices").mkdir(parents=True, exist_ok=True)
         created: list[Path] = []
+        labels = {
+            "brand": "marca",
+            "facts": "hechos",
+            "offers": "oferta",
+            "swipe": "referencias",
+            "log": "registro",
+            "plan": "plan",
+        }
         for key, filename in PROFILE_FILES.items():
             path = self.profile_file(profile, key)
             if path.exists():
@@ -101,12 +108,12 @@ class InstagramStorage:
                 source = Path(__file__).resolve().parents[1] / "config" / "platform-rules.json"
                 shutil.copyfile(source, path)
             else:
-                path.write_text(f"# {filename.rsplit('.', 1)[0]}\n\n", encoding="utf-8")
+                path.write_text(f"# {labels.get(key, filename.rsplit('.', 1)[0])}\n\n", encoding="utf-8")
             created.append(path)
         for speaker in voices:
             path = self.voice_file(profile, speaker)
             if not path.exists():
-                path.write_text("# Speaker voice\n\n", encoding="utf-8")
+                path.write_text(f"# Voz de {speaker}\n\n", encoding="utf-8")
                 created.append(path)
         return created
 
@@ -134,14 +141,14 @@ class InstagramStorage:
 
 
 def _parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Resolve or initialize Instagram profile state safely.")
+    parser = argparse.ArgumentParser(description="Resolver o inicializar de forma segura el estado de un perfil de Instagram.")
     sub = parser.add_subparsers(dest="command", required=True)
-    path = sub.add_parser("path")
+    path = sub.add_parser("path", help="mostrar una ruta de estado permitida")
     path.add_argument("--workspace")
     path.add_argument("--profile", required=True)
     path.add_argument("--file", choices=[*PROFILE_FILES, "voice"], required=True)
     path.add_argument("--speaker")
-    init = sub.add_parser("init")
+    init = sub.add_parser("init", help="crear la estructura vacía de un perfil")
     init.add_argument("--workspace")
     init.add_argument("--profile", required=True)
     init.add_argument("--voices", nargs="*", default=[])
@@ -153,7 +160,7 @@ def main() -> None:
     storage = InstagramStorage.from_environment(args.workspace)
     if args.command == "path":
         if args.file == "voice" and not args.speaker:
-            raise SystemExit("--speaker is required for --file voice")
+            raise SystemExit("--speaker es obligatorio cuando --file es voice")
         path = storage.voice_file(args.profile, args.speaker) if args.file == "voice" else storage.profile_file(args.profile, args.file)
         print(path)
         return

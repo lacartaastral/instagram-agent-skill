@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.invalid/instagram-agent-openclaw/platform-rules.schema.json",
-  "title": "Instagram Agent OpenClaw platform rules",
+  "title": "Reglas de plataforma del agente de Instagram para OpenClaw",
   "type": "object",
   "required": ["schema_version", "rules"],
   "properties": {

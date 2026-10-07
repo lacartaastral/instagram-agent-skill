@@ -1,46 +1,46 @@
-# Instagram Agent OpenClaw
+# Instagram Agent para OpenClaw
 
 Fork mantenible y nativo para OpenClaw del proyecto
-Jakeschincariol/instagram-agent-skill. Parte exactamente del baseline
+Jakeschincariol/instagram-agent-skill. Parte exactamente del commit base
 
 d03c56bb598be770c60b201f94237e5d1a4268a6.
 
-Conserva las 13 skills y sus heurísticas Python/JSON. Añade un boundary de
-perfiles, voces, estado externo, reglas de plataforma verificables y routing
-gobernado. El sistema prepara texto y análisis; no publica.
+Conserva las 13 skills originales y sus heurísticas Python/JSON. Añade un límite
+seguro entre perfiles, voces y estado externo, reglas de plataforma verificables
+y un enrutamiento de modelos gobernado. El sistema prepara texto y análisis;
+no publica.
 
 ## 1. Origen y atribución
 
-- Upstream: https://github.com/Jakeschincariol/instagram-agent-skill
-- Baseline: d03c56bb598be770c60b201f94237e5d1a4268a6
+- Repositorio de origen: https://github.com/Jakeschincariol/instagram-agent-skill
+- Commit base: d03c56bb598be770c60b201f94237e5d1a4268a6
 - Fork: https://github.com/lacartaastral/instagram-agent-skill
 - Licencia: MIT, conservada en LICENSE
 - Autoría original: Jake Schincariol / opusjake.ai
 
-Las métricas, límites y afirmaciones del upstream se consideran evidencia
-histórica del baseline hasta que estén verificadas de nuevo. No se presentan
-como resultados propios ni como garantía.
+Las métricas, límites y afirmaciones del repositorio de origen se consideran
+evidencia histórica del commit base hasta que se verifiquen de nuevo. No se
+presentan como resultados propios ni como garantías.
 
-## 2. Diferencias respecto al upstream
+## 2. Diferencias respecto al repositorio de origen
 
-- Se eliminan los manifiestos y rutas específicos del asistente original.
+- Se eliminan sus manifiestos y rutas específicas del asistente original.
 - SKILL.md sigue siendo el formato principal; los recursos de cada skill se
   resuelven mediante {baseDir}.
-- Se añade shared/storage.py para localizar estado por workspace, perfil y voz,
-  validar componentes y escribir de forma atómica.
-- Se añade shared/model_routing.py y config/model-routing.json. Las skills no
-  escogen modelos por su cuenta.
-- Se añade ig-router, un orquestador pequeño que resuelve profile, speaker,
-  intención, skill y tier sin redactar.
+- shared/storage.py localiza el estado por workspace, perfil y voz, valida los
+  componentes y escribe de forma atómica.
+- shared/model_routing.py y config/model-routing.json centralizan la política.
+  Las skills no eligen modelos por su cuenta.
+- ig-router resuelve perfil, voz (speaker), intención, skill y tier sin redactar.
 - Las reglas mutables viven en config/platform-rules.json y pueden ser
   sobreescritas por el platform-rules.json de cada perfil. Las reglas no
-  verificadas generan warnings y no se convierten en hechos.
-- La investigación viral usa el browser de OpenClaw solo para lectura humana
-  de un conjunto pequeño. No hay crawler, login automatizado, Apify, Blotato ni
-  servicios equivalentes.
-- El approval gate queda explícito: NOTHING PUBLISHES UNTIL USER APPROVES.
-  Incluso después de aprobar un borrador, la aprobación solo registra estado
-  local; no habilita acciones sociales externas.
+  verificadas generan avisos y no se convierten en hechos.
+- La investigación viral usa el navegador de OpenClaw solo para lectura humana
+  de un conjunto pequeño. No hay crawler, login automatizado ni servicios
+  externos de crecimiento.
+- El gate de aprobación queda explícito: NO SE PUBLICA NADA HASTA QUE EL
+  USUARIO LO APRUEBA. Incluso después de aprobar un borrador, la aprobación
+  solo registra estado local; no habilita acciones sociales externas.
 
 ## 3. Instalación en OpenClaw
 
@@ -55,7 +55,7 @@ git -C /srv/openclaw/instagram-agent-openclaw switch openclaw/multiperfil-govern
 ~~~
 
 Añade solo la raíz de skills como extensión, preservando la configuración
-existente. Haz primero dry-run y comprueba el diff de configuración:
+existente. Haz primero un dry-run y comprueba el diff de configuración:
 
 ~~~bash
 openclaw config set skills.load.extraDirs '["/srv/openclaw/instagram-agent-openclaw/skills"]' --strict-json --dry-run
@@ -63,8 +63,8 @@ openclaw config set skills.load.extraDirs '["/srv/openclaw/instagram-agent-openc
 openclaw skills list --eligible
 ~~~
 
-La ruta anterior es la del host auditado; en otro host debe ser la ruta real
-del checkout. No sustituyas openclaw.json completo. Si no se desea activar aún
+La ruta anterior es la del host auditado; en otro host debe ser la ruta real del
+checkout. No sustituyas openclaw.json completo. Si todavía no se desea activar
 la raíz, los tests locales siguen siendo ejecutables sin modificar OpenClaw.
 
 ## 4. Estructura
@@ -142,52 +142,54 @@ de la fuente autorizada correspondiente.
 
 Mantén separadas estas capas:
 
-- brand voice: identidad y promesa de la cuenta;
-- speaker voice: cómo habla una persona concreta;
-- factual knowledge: hechos suministrados y trazables;
-- offer: producto o servicio real;
+- voz de marca: identidad y promesa de la cuenta;
+- voz seleccionada: cómo habla una persona concreta;
+- conocimiento factual: hechos suministrados y trazables;
+- oferta: producto o servicio real;
 - CTA: acción solicitada, sin inventar enlaces ni resultados.
 
-## 6. Model routing
+## 6. Enrutamiento de modelos
 
-La política está en config/model-routing.json y fue contrastada con la
-allowlist observada en la auditoría OpenClaw del 2026-10-07:
+La política está en config/model-routing.json y fue contrastada con la allowlist
+observada en la auditoría de OpenClaw del 2026-10-07:
 
 - Tier 0 DETERMINISTIC: scripts locales; no llama a un modelo.
-- Tier 1 ROUTINE: default autorizado, actualmente openai/gpt-5.6-luna.
-- Tier 2 QUALITY: solo delegación explícita, actualmente openai/gpt-5.6-sol.
+- Tier 1 ROUTINE: modelo autorizado por defecto, actualmente
+  openai/gpt-5.6-luna.
+- Tier 2 QUALITY: solo delegación explícita, actualmente
+  openai/gpt-5.6-sol.
 - Tier 3 DEEP: solo delegación explícita, actualmente openai/gpt-6-astra.
 
-Los IDs son una instantánea y deben compararse con la allowlist live antes de
-usar Tier 2/3. Si no están autorizados, el routing falla cerrado. La skill no
-modifica la allowlist, no convierte Sol en modelo global y no usa Astra por
-defecto. La delegación se realiza mediante el mecanismo nativo de OpenClaw con
-model y thinking explícitos.
+Los identificadores son una instantánea y deben compararse con la lista permitida (allowlist) viva
+antes de usar Tier 2/3. Si no están autorizados, el enrutamiento falla cerrado.
+La skill no modifica la lista permitida, no convierte Sol en modelo global y no usa
+Astra por defecto. La delegación se realiza mediante el mecanismo nativo de
+OpenClaw con model y thinking explícitos.
 
 ## 7. Reglas de plataforma
 
-config/platform-rules.json centraliza límites, dimensiones, safe zones,
-duraciones y claims de comportamiento. Cada regla contiene value,
-verified_at, source, notes y verified. Los valores heredados del baseline están
-marcados no verificados; el linter los muestra como warnings. Un perfil puede
-overlayar sus reglas sin editar las 13 skills.
+config/platform-rules.json centraliza límites, dimensiones, zonas seguras,
+duraciones y afirmaciones de comportamiento. Cada regla contiene value,
+verified_at, source, notes y verified. Los valores heredados del commit base están
+marcados como no verificados; el linter los muestra como avisos. Un perfil
+puede superponer sus reglas sin editar las 13 skills.
 
 ## 8. Investigación viral
 
-ig-viral trabaja con browser disponible en OpenClaw solo si está habilitado y
-el usuario está presente. Lee una muestra pequeña, calcula el outlier multiple
-frente a la mediana de la propia cuenta y copia estructuras, no contenido. No
-pide contraseñas, no inicia sesión por el usuario, no hace crawling masivo y no
-ejecuta automatizaciones de crecimiento.
+ig-viral trabaja con el navegador disponible en OpenClaw solo si está habilitado
+y el usuario está presente. Lee una muestra pequeña, calcula el múltiplo de
+outlier frente a la mediana de la propia cuenta y copia estructuras, no
+contenido. No pide contraseñas, no inicia sesión por el usuario, no hace
+crawling masivo y no ejecuta automatizaciones de crecimiento.
 
-## 9. Approval gate
+## 9. Gate de aprobación
 
 Las skills pueden investigar, analizar, redactar, puntuar, planificar, preparar
 assets y registrar un artefacto local aprobado. No pueden publicar, comentar,
-seguir cuentas, enviar DMs ni ejecutar acciones sociales irreversibles. No se
-implementa una extensión de publicación en este fork.
+seguir cuentas, enviar DMs ni ejecutar acciones sociales irreversibles. Este fork
+no implementa una extensión de publicación.
 
-## 10. Tests y smoke tests
+## 10. Tests y pruebas rápidas
 
 No hay dependencias Python externas para la suite determinista:
 
@@ -195,29 +197,29 @@ No hay dependencias Python externas para la suite determinista:
 python3 -m unittest discover -s tests -v
 python3 -m compileall -q shared skills
 
-printf '%s\n' 'A hook with a real number' | \
+printf '%s\n' 'Un gancho con una cifra real' | \
   python3 skills/ig-reel/hookscore.py --json
-printf '%s\n' 'A true sentence. Another concrete sentence.' | \
+printf '%s\n' 'Una frase cierta. Otra frase concreta.' | \
   python3 skills/ig-human/humanize.py --json
-printf '%s\n' 'Comment CONTRACT and save this.' | \
+printf '%s\n' 'Comenta CONTRATO y guárdalo.' | \
   python3 skills/ig-caption/caption.py --json
 ~~~
 
-Para validar discovery después de activar la raíz:
+Para validar el discovery después de activar la raíz:
 
 ~~~bash
 openclaw skills list --eligible
 openclaw skills list --json
 ~~~
 
-La suite comprueba carga de las 13 skills y ig-router, ausencia de rutas
-específicas del asistente original, resolución de recursos, aislamiento entre
-perfiles/voces, routing sin Sol/Astra para Tier 0 y lectura de las reglas
-centralizadas.
+La suite comprueba la carga de las 13 skills y ig-router, la ausencia de rutas
+específicas del sistema original, la resolución de recursos, el aislamiento
+entre perfiles y voces, el enrutamiento sin Sol/Astra para Tier 0 y la lectura
+de las reglas centralizadas.
 
-## 11. Sincronizar upstream
+## 11. Sincronizar el repositorio de origen
 
-No edites el upstream directamente. Los remotes esperados son:
+No edites el repositorio de origen directamente. Los remotes esperados son:
 
 ~~~bash
 git remote -v
@@ -238,5 +240,5 @@ git diff --check
 git commit
 ~~~
 
-No aceptes automáticamente cambios que reintroduzcan rutas del asistente
-original, publicación, scraping masivo, datos inventados o mezcla de estado.
+No aceptes automáticamente cambios que reintroduzcan rutas del sistema original,
+publicación, scraping masivo, datos inventados o mezcla de estado.

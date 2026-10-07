@@ -3,6 +3,7 @@ import importlib.util
 import json
 import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -55,6 +56,16 @@ class DeterministicToolTests(unittest.TestCase):
         right = SWIPE.analyse(copy.deepcopy(rows), formulas)
         self.assertEqual(left, right)
         self.assertEqual(left["reels"][0]["account"], "@a")
+
+    def test_swipe_accepts_spanish_headers(self):
+        with tempfile.NamedTemporaryFile("w+", encoding="utf-8") as handle:
+            handle.write("cuenta\tseguidores\tmediana\tvisitas\tgancho\n")
+            handle.write("@ejemplo\t4000\t1000\t4000\tNadie te cuenta esto\n")
+            handle.flush()
+            rows = SWIPE.read_rows(handle.name)
+        self.assertEqual(rows[0]["account"], "@ejemplo")
+        self.assertEqual(rows[0]["views"], 4000)
+        self.assertEqual(rows[0]["hook"], "Nadie te cuenta esto")
 
     def test_tools_run_from_outside_repo(self):
         commands = [

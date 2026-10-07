@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "verified_at": "2026-10-07",
-  "source": "read-only OpenClaw audit: agents.defaults.model and agents.defaults.modelPolicy.allow",
+  "source": "auditoría de OpenClaw en solo lectura: agents.defaults.model y agents.defaults.modelPolicy.allow",
   "runtime": {
     "default_model": "openai/gpt-5.6-luna",
     "quality_model": "openai/gpt-5.6-sol",
@@ -18,15 +18,15 @@
     ]
   },
   "tiers": {
-    "0": {"name": "DETERMINISTIC", "model": null, "execution": "local Python scripts"},
-    "1": {"name": "ROUTINE", "model": "openai/gpt-5.6-luna", "execution": "current authorized/default model"},
-    "2": {"name": "QUALITY", "model": "openai/gpt-5.6-sol", "execution": "explicit native OpenClaw subagent"},
-    "3": {"name": "DEEP", "model": "openai/gpt-6-astra", "execution": "explicit native OpenClaw subagent"}
+    "0": {"name": "DETERMINISTIC", "model": null, "execution": "scripts Python locales"},
+    "1": {"name": "ROUTINE", "model": "openai/gpt-5.6-luna", "execution": "modelo autorizado actual o modelo por defecto"},
+    "2": {"name": "QUALITY", "model": "openai/gpt-5.6-sol", "execution": "subagente nativo explícito de OpenClaw"},
+    "3": {"name": "DEEP", "model": "openai/gpt-6-astra", "execution": "subagente nativo explícito de OpenClaw"}
   },
   "invariants": [
-    "Tier 0 never calls a model.",
-    "Tier 2 and Tier 3 require explicit model and thinking values on the subagent request.",
-    "A model not present in the live OpenClaw allowlist is blocked; do not widen the allowlist from this repository.",
-    "Sol and Astra are never global defaults and are never selected by a skill directly."
+    "Tier 0 nunca llama a un modelo.",
+    "Tier 2 y Tier 3 requieren model y thinking explícitos en la petición al subagente.",
+    "Un modelo que no esté en la allowlist viva de OpenClaw queda bloqueado; este repositorio nunca debe ampliar la allowlist.",
+    "Sol y Astra nunca son modelos globales por defecto ni los selecciona directamente una skill."
   ]
 }

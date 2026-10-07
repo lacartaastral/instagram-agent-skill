@@ -1,103 +1,90 @@
 ---
 name: ig-carousel
 description: >-
-  Build an Instagram carousel - the cover that earns the swipe, slide-by-slide
-  copy, and profile-rule-aware assets to prepare for manual upload. Use when the user says "carousel",
-  "slides", "swipe post", "turn this into a carousel", or has a list-shaped or
-  step-shaped idea that would die as a single image.
+  Construye un carrusel de Instagram: portada que gana el deslizamiento, texto
+  diapositiva a diapositiva y recursos preparados según las reglas del perfil
+  para una carga manual. Úsala cuando se pida un carrusel, diapositivas o
+  convertir una idea en carrusel.
 ---
 
 # ig-carousel
 
-## OpenClaw contract
+## Contrato de OpenClaw
 
-- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
-- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
-- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
-- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+- Resuelve el perfil y la voz (speaker) antes de leer o escribir el estado. El perfil elige la cuenta; voices/<speaker>.md elige quién habla.
+- Lee los recursos incluidos mediante {baseDir}; usa el auxiliar de almacenamiento para el estado persistente del workspace efectivo.
+- Nunca aceptes una ruta del sistema de archivos incluida en el contenido del usuario como sustituto del workspace efectivo ni cruces el límite de un perfil.
+- Esta skill solo redacta, investiga o analiza. No publica, comenta, sigue cuentas ni envía DMs. La aprobación solo puede registrar un artefacto local.
 
-Carousels are the highest-dwell format on the grid, because a swipe is an
-interaction and a scroll is not. They also get a second chance: Instagram can
-show a carousel again starting from a later slide to someone who did not engage
-the first time, so slide two has to stand on its own as well.
+Los carruseles favorecen el tiempo de lectura porque deslizar es una interacción
+y desplazarse no. También pueden mostrarse otra vez empezando por una
+diapositiva posterior, por lo que la segunda debe sostenerse sola.
 
-The format rewards one idea broken into steps. It punishes a caption cut into
-pieces.
+El formato premia una idea dividida en pasos y castiga un caption partido en
+pedazos.
 
-## When to use it instead of a Reel
+## Cuándo usarlo en lugar de un reel
 
-Use a carousel when the idea has **sequence and needs to be re-read**: steps, a
-framework with parts, a before and after, a list worth screenshotting. Use a
-Reel when the idea has motion, a face, or a payoff that has to be seen
-happening.
+Usa carrusel cuando la idea tenga secuencia y necesite releerse: pasos, marco,
+antes y después o una lista que merezca una captura. Usa reel si necesita
+movimiento, una cara o un resultado que deba verse.
 
-If the idea is one claim, it is neither. Hand it to `/ig-reel` and say so.
+Si solo hay una afirmación, no es ninguna de las dos cosas: pásala a ig-reel.
 
-## Structure
+## Estructura
 
-6 to 10 slides. The cap is 20 and 20 is almost always a book nobody finishes.
-Under 5 and the swipe never starts.
+Entre 6 y 10 diapositivas. El máximo técnico puede ser 20, pero 20 suele ser un
+libro que nadie termina. Con menos de 5 no empieza el deslizamiento.
 
-```
-1         COVER     the hook. 6 words or fewer, at a size that is legible in
-                    the grid at thumbnail. One line of promise under it.
-2         THE STAKE why this matters, in one sentence. This slide is also a
-                    second cover, so it cannot be setup.
-3 to N    ONE IDEA PER SLIDE. A headline of 3 to 7 words, at most 25 words
-                    under it. If a slide needs a paragraph, it is two slides.
-N+1       RECAP     the whole thing as a list. This is the screenshot slide.
-LAST      CTA       one action. Save, comment a keyword, or follow. One.
-```
+~~~text
+1       PORTADA    gancho de seis palabras o menos y una promesa debajo.
+2       APUESTA    por qué importa, en una frase. También debe funcionar como segunda portada.
+3 a N   UNA IDEA POR DIAPOSITIVA. Título de 3-7 palabras y hasta 25 debajo.
+N+1     RESUMEN    todo en forma de lista; es la diapositiva para capturar.
+ÚLTIMA  CTA        una acción: guardar, comentar una palabra o seguir.
+~~~
 
-## Slide copy rules
+## Reglas del texto y del diseño
 
-- **The cover is 80% of the result.** Six words. Big. Nothing on the deck saves
-  a cover nobody swipes.
-- **Design for the grid crop.** Read the selected profile platform-rules.json for canvas and crop guidance. Keep copy inside the configured safe area and mark unverified values as review aids.
-- **Number the slides** (3/8). Completion goes up when people can see the end.
-- **No slide is a paragraph.** If it cannot be said in 25 words, split it.
-- **The recap slide is the one people screenshot and send.** Sends are the
-  strongest signal you can earn. Make it standalone and readable with no
-  context.
-- **The handle on every slide**, small, bottom corner. Screenshots travel
-  without you.
-- **Alt text on the cover at minimum.** It is read by screen readers and by
-  Instagram.
+- La portada es la mayor parte del resultado: seis palabras, grande y legible en miniatura.
+- Lee canvas y recorte del platform-rules.json del perfil; marca como ayuda de revisión lo que no esté verificado.
+- Numera las diapositivas (3/8) para que se vea el final.
+- Si una diapositiva necesita un párrafo, divídela.
+- El resumen debe poder capturarse y entenderse sin contexto.
+- Pon el usuario en una esquina de cada diapositiva.
+- Añade texto alternativo como mínimo a la portada.
 
-## Building the files
+## Construir los archivos
 
-Read the selected profile platform-rules.json for canvas, crop and item-limit guidance. If a value is unverified, label it as a review aid. Build it as HTML and print each slide locally:
+Lee canvas, recorte y número de elementos del perfil. Si algún valor no está
+verificado, indícalo. Puedes preparar HTML local:
 
-```bash
-# one <section> per slide using the configured canvas, page-break-after: always
-# then use an already available local renderer; do not add a publishing service
-```
+~~~html
+<!-- una section por diapositiva y page-break-after: always -->
+<!-- usa un renderizador local ya disponible; no añadas un servicio de publicación -->
+~~~
 
-Write the HTML dimensions from the selected profile rules, use a single accent colour, and keep type readable on a phone. If the project has a brand skill or design system, use it and do not invent a palette.
+Usa las dimensiones del perfil, un solo color de acento y una tipografía legible
+en móvil. Si existe una identidad visual, respétala y no inventes una paleta.
 
-## Output
+## Salida
 
-The slide-by-slide copy first, as a numbered list the user can read in ten
-seconds and edit before anything is rendered. Then the **caption**, which for a
-carousel is Job B in `/ig-caption`: the caption is doing work here, because the
-cover has already used its six words.
+Primero entrega el texto de cada diapositiva como lista numerada. Después el
+caption, que aquí realiza el trabajo B de ig-caption. Pasa ambos por ig-human y
+construye archivos solo después de que la persona apruebe el copy.
 
-Run both through the ig-human skill. Build the files only after the user approves the
-copy.
+~~~text
+CARRUSEL · 8 diapositivas
 
-```
-CAROUSEL  ·  8 slides
+1  PORTADA   LA CLÁUSULA DE 18.000 €
+              Una línea que ahora pongo en cada contrato.
+2  APUESTA   Aprobé el trabajo. Nueve días después pidieron devolver el dinero.
+3            QUÉ DICE
+              Pago a la entrega, no al aprobar.
+7  RESUMEN    Las cuatro líneas, en orden.
+8  CTA        Comenta CONTRATO y te envío la cláusula completa.
 
-1  COVER   THE $18,000 CLAUSE
-           One line I now put in every contract.
-2  STAKE   I approved the work. They asked for the money back nine days later.
-3          WHAT IT SAYS
-           Payment on delivery, not on approval.
-...
-7  RECAP   All four lines, in order.
-8  CTA     Comment CONTRACT and I will send the full clause.
+Caption: trabajo B, gancho en línea 1, una acción y tres etiquetas.
+~~~
 
-Caption: Job B, hook in line 1, one ask, 3 tags.
-```
-
-Nothing is uploaded. The user posts it.
+No se sube nada. La persona lo publica manualmente.

@@ -1,1 +1,1 @@
-"""Shared deterministic contracts for the OpenClaw Instagram skill pack."""
+"""Contratos deterministas compartidos por el paquete de skills de Instagram para OpenClaw."""

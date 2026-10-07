@@ -1,54 +1,53 @@
-# Speaker voice template
+# Plantilla de voz seleccionada
 
-Store one copy at
+Guarda una copia en
 <OPENCLAW_WORKSPACE>/state/instagram-agent/profiles/<profile>/voices/<speaker>.md.
-The profile owns the account and brand context; this file owns only how one
-speaker communicates. Do not put factual knowledge, offers or platform rules
-here.
+El perfil contiene la cuenta y el contexto de marca; este archivo solo contiene
+cómo se comunica una persona. No pongas aquí hechos, ofertas ni reglas de
+plataforma.
 
-If the speaker profile is missing, ask for three real reels or captions and
-explicitly label any inferred preference as provisional. Never invent proof,
-clients, numbers or claims.
+Si falta la voz, pide tres reels o captions reales y marca como provisional toda
+preferencia inferida. Nunca inventes pruebas, clientes, cifras ni afirmaciones.
 
 ---
 
-## Who I am
+## Quién soy
 
-- **Name:**
-- **Speaker id:**
-- **Relationship to the profile/brand:**
-- **Who I am talking to:**
-- **Topics I can speak about:**
+- **Nombre:**
+- **Id de la voz (speaker):**
+- **Relación con el perfil o la marca:**
+- **A quién hablo:**
+- **Temas sobre los que puedo hablar:**
 
-## What I sound like
+## Cómo sueno
 
-- **Three real reels or captions that sound like me:**
-- **On camera I am:** (fast and loud / dry / calm / funny / deadpan)
-- **Words I actually use:**
-- **Words I would never say out loud:**
-- **Do I swear:** (yes / mild / no)
-- **Emoji in captions:** (never / one, rarely / freely)
-- **Face on camera:** (always / sometimes / faceless)
-- **Voiceover or to-camera:**
-- **Pace:** (words per minute, if known; beats.py can use it)
+- **Tres reels o captions reales que suenan a mí:**
+- **En cámara soy:** (rápido y expresivo / seco / tranquilo / gracioso / impasible)
+- **Palabras que uso de verdad:**
+- **Palabras que nunca diría en voz alta:**
+- **¿Digo palabrotas?:** (sí / suaves / no)
+- **Emojis en captions:** (nunca / uno de vez en cuando / libremente)
+- **Cara en cámara:** (siempre / a veces / sin mostrarla)
+- **Voz en off o hablando a cámara:**
+- **Ritmo:** (palabras por minuto, si se sabe; beats.py puede usarlo)
 
-## My positions
+## Mis posiciones
 
-Three to five things I believe that some of the audience does not.
+Tres a cinco cosas que creo y que parte de la audiencia no cree.
 
 1.
 2.
 3.
 
-## Off limits
+## Límites
 
-- **Topics I do not post about:**
-- **People, clients, numbers or names I cannot say publicly:**
-- **Claims I am not allowed to make:**
+- **Temas sobre los que no publico:**
+- **Personas, clientes, cifras o nombres que no puedo decir en público:**
+- **Afirmaciones que no tengo permitido hacer:**
 
-## Delivery preferences
+## Preferencias de entrega
 
-- **Sentence length:**
-- **How direct I am:**
-- **How I handle uncertainty:**
-- **Words that must stay exactly as written:**
+- **Longitud de frase:**
+- **Grado de claridad directa:**
+- **Cómo trato la incertidumbre:**
+- **Palabras que deben conservarse exactamente:**

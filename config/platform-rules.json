@@ -2,30 +2,30 @@
   "schema_version": 1,
   "scope": "generic-instagram-profile",
   "verified_at": "2026-10-07",
-  "verification_status": "baseline_snapshot_not_independently_verified",
-  "source": "Upstream baseline d03c56bb598be770c60b201f94237e5d1a4268a6; verify against current Instagram documentation before relying on a mutable value.",
+  "verification_status": "instantánea_del_baseline_no_verificada_de_forma_independiente",
+  "source": "Baseline de origen d03c56bb598be770c60b201f94237e5d1a4268a6; verificar en la documentación actual de Instagram antes de confiar en un valor mutable.",
   "rules": {
     "caption": {
       "max_characters": {
         "value": 2200,
         "verified": false,
         "verified_at": null,
-        "source": "upstream baseline claim",
-        "notes": "Treat as a warning until independently verified."
+        "source": "afirmación del baseline de origen",
+        "notes": "Tratar como aviso hasta verificarlo de forma independiente."
       },
       "feed_preview_characters": {
         "value": 125,
         "verified": false,
         "verified_at": null,
-        "source": "upstream baseline approximation",
-        "notes": "Device, font and line wrapping can change the visible cut."
+        "source": "aproximación del baseline de origen",
+        "notes": "El dispositivo, la fuente y el salto de línea pueden cambiar el corte visible."
       },
       "hashtag_max_per_post": {
         "value": 5,
         "verified": false,
         "verified_at": null,
-        "source": "upstream baseline claim",
-        "notes": "Do not present this as a current platform fact until verified."
+        "source": "afirmación del baseline de origen",
+        "notes": "No presentarlo como hecho actual de la plataforma hasta verificarlo."
       }
     },
     "reel": {
@@ -33,22 +33,22 @@
         "value": {"min": 15, "max": 45},
         "verified": false,
         "verified_at": null,
-        "source": "upstream baseline editorial heuristic",
-        "notes": "A recommendation, not a platform requirement."
+        "source": "heurística editorial del baseline de origen",
+        "notes": "Es una recomendación, no un requisito de la plataforma."
       },
       "maximum_duration_seconds": {
         "value": 180,
         "verified": false,
         "verified_at": null,
-        "source": "upstream baseline claim",
-        "notes": "Verify before using for production planning."
+        "source": "afirmación del baseline de origen",
+        "notes": "Verificar antes de usarlo para planificar producción."
       },
       "safe_zone": {
         "value": {"canvas_width": 1080, "canvas_height": 1920, "top_clear_px": 230, "bottom_content_start_px": 1440, "right_clear_px": 230},
         "verified": false,
         "verified_at": null,
-        "source": "upstream baseline editorial guidance",
-        "notes": "UI overlays and placements change; keep this configurable."
+        "source": "guía editorial del baseline de origen",
+        "notes": "Las capas de la interfaz cambian; mantenerlo configurable."
       }
     },
     "carousel": {
@@ -56,15 +56,15 @@
         "value": {"width": 1080, "height": 1350, "aspect_ratio": "4:5"},
         "verified": false,
         "verified_at": null,
-        "source": "upstream baseline claim",
-        "notes": "Verify current upload dimensions and crop behavior."
+        "source": "afirmación del baseline de origen",
+        "notes": "Verificar las dimensiones actuales de carga y el comportamiento del recorte."
       },
       "maximum_items": {
         "value": 20,
         "verified": false,
         "verified_at": null,
-        "source": "upstream baseline claim",
-        "notes": "Use a warning when unverified."
+        "source": "afirmación del baseline de origen",
+        "notes": "Mostrar un aviso cuando no esté verificado."
       }
     },
     "story": {
@@ -72,8 +72,8 @@
         "value": {"width": 1080, "height": 1920, "top_clear_px": 250, "bottom_content_start_px": 1600},
         "verified": false,
         "verified_at": null,
-        "source": "upstream baseline editorial guidance",
-        "notes": "Treat safe-zone values as a review aid, not a guarantee."
+        "source": "guía editorial del baseline de origen",
+        "notes": "Tratar las zonas seguras como ayuda de revisión, no como garantía."
       }
     },
     "research": {
@@ -81,15 +81,15 @@
         "value": 10,
         "verified": true,
         "verified_at": "2026-10-07",
-        "source": "fork governance decision",
-        "notes": "Local safety boundary: human-sized research only; never a crawler."
+        "source": "decisión de gobierno del fork",
+        "notes": "Límite local de seguridad: investigación a escala humana; nunca un crawler."
       },
       "max_reels_per_account_per_batch": {
         "value": 12,
         "verified": true,
         "verified_at": "2026-10-07",
-        "source": "fork governance decision",
-        "notes": "Local safety boundary, not an Instagram platform limit."
+        "source": "decisión de gobierno del fork",
+        "notes": "Límite local de seguridad, no límite de Instagram."
       }
     }
   }

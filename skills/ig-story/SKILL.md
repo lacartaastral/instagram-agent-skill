@@ -1,103 +1,81 @@
 ---
 name: ig-story
 description: >-
-  Write the day's Instagram Stories - the frame-by-frame sequence, which
-  stickers to use where, and the one that moves people into the DMs. Use when
-  the user says "stories", "what do I post on my story", "story sequence",
-  "poll idea", "I have nothing to story about", or wants to sell something
-  without making a post about it.
+  Escribe las stories del día: secuencia pantalla a pantalla, sticker adecuado
+  y una acción que pueda llevar a una conversación. Úsala cuando se pidan ideas
+  de stories, encuestas, secuencias o vender sin hacer una publicación.
 ---
 
 # ig-story
 
-## OpenClaw contract
+## Contrato de OpenClaw
 
-- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
-- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
-- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
-- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+- Resuelve el perfil y la voz (speaker) antes de leer o escribir el estado. El perfil elige la cuenta; voices/<speaker>.md elige quién habla.
+- Lee los recursos incluidos mediante {baseDir}; usa el auxiliar de almacenamiento para el estado persistente del workspace efectivo.
+- Nunca aceptes una ruta del sistema de archivos incluida en el contenido del usuario como sustituto del workspace efectivo ni cruces el límite de un perfil.
+- Esta skill solo redacta, investiga o analiza. No publica, comenta, sigue cuentas ni envía DMs. La aprobación solo puede registrar un borrador local.
 
-Stories are not a smaller feed. The feed is how strangers find you. Stories are
-how the people who already follow you decide whether you are a person worth
-buying from, and they are the only surface on Instagram where a tap turns into
-a conversation in one move.
+Las stories no son un feed pequeño. El feed descubre la cuenta; las stories
+permiten que quienes ya siguen decidan si hay una persona detrás y pueden
+convertir un toque en conversación.
 
-Nobody outside your followers sees these, so the job is completely different:
-depth, not reach.
+## Forma diaria
 
-## The daily shape
+Entre tres y siete pantallas. Más de siete aumenta los toques de avance, justo
+antes de la acción final.
 
-Three to seven frames a day. Beyond about seven, the tap-forward rate climbs
-and the last frames play to nobody, which is exactly where people put the ask.
+~~~text
+1       APERTURA     algo que ocurre hoy, con cara o manos.
+2-3     CENTRO       proceso, resultado o error real.
+4       ACCIÓN       un sticker: encuesta, pregunta, quiz o enlace.
+5       CIERRE       respuesta, resultado o preparación de mañana.
+~~~
 
-```
-1       THE OPEN     something happening today, with a face or a hand in it.
-2-3     THE MIDDLE   the actual content: the process, the result, the mistake.
-4       THE ASK      one sticker. Poll, question box, quiz or link.
-5       THE CLOSE    the answer, the outcome, or tomorrow's setup.
-```
+Pon la acción en la pantalla 4, no en la 7.
 
-Put the ask at frame 4, not frame 7. Completion drops with every tap and the
-ask should be seen by the people who are still there.
+## Stickers
 
-## The stickers, and what each is actually for
-
-| sticker | job | use when |
+| sticker | trabajo | úsalo cuando |
 | --- | --- | --- |
-| **Poll** | the cheapest tap there is | you want volume of response, not information |
-| **Question box** | harvesting the exact words people use | you need content ideas or objections, verbatim |
-| **Quiz** | teaching by letting them be wrong | there is a common misconception in the niche |
-| **Slider** | vibe check | nothing important. Fun, low value |
-| **Link** | the only clickable surface besides the bio | there is somewhere real to go |
-| **Countdown** | a deadline people can subscribe to | a launch, a live, a close date |
-| **Add yours** | reach beyond your followers, occasionally | the prompt is one anyone in the niche can answer |
+| Encuesta | conseguir un toque rápido | buscas volumen de respuesta |
+| Pregunta | recoger las palabras exactas | necesitas ideas u objeciones |
+| Quiz | enseñar permitiendo equivocarse | hay una confusión habitual |
+| Barra | medir ambiente | no hay nada importante en juego |
+| Enlace | llevar a un destino real | existe una página concreta |
+| Cuenta atrás | recordar una fecha | lanzamiento, directo o cierre |
+| Añade el tuyo | ampliar alcance ocasionalmente | cualquiera del nicho puede responder |
 
-The question box is the most undervalued one in the list. Every answer is a
-caption, a Reel hook or a DM opener written in the audience's own words. Feed
-them to `/ig-reel` as formula #16.
+La caja de preguntas produce captions, ganchos y aperturas de DM con las
+palabras de la audiencia. Pásalos a ig-reel como fórmula 16.
 
-## Rules
+## Reglas
 
-- **A face or a hand in the first frame.** Text on a coloured background gets
-  tapped through, and the first frame decides whether the rest get watched.
-- **One idea per frame.** Reading a paragraph on a story is not a thing anyone
-  does.
-- **Keep text inside the middle.** Read the story safe-zone values from the selected profile platform-rules.json. If unverified, treat them as a design aid and review the current UI before rendering.
-- **Talk to one person.** "You" singular. Stories are the closest thing to a
-  DM that is not one.
-- **Do not repost your own feed post to stories with no comment.** It is the
-  single most ignored frame on the platform. If you are pointing at a post, say
-  what happened in the comments and why it is worth going back for.
-- **Sell on stories, not in posts.** Three frames of context, one frame of
-  offer, one frame of proof. That sequence sells more than a feed post about
-  the same thing and costs you no reach.
+- Cara o manos en la primera pantalla.
+- Una idea por pantalla.
+- Lee las zonas seguras del platform-rules.json del perfil; si no están verificadas, son solo una ayuda de diseño.
+- Habla a una persona, en singular.
+- No republiques una publicación sin explicar por qué merece volver a ella.
+- Vende en stories: contexto, oferta y prueba; no sacrifiques el alcance del feed.
 
-## The DM funnel, done honestly
+## Conversación honesta
 
-The sequence that works: a story that names a problem, a question box or a poll
-that lets people say "that's me", and then a reply to each person who answered.
-The conversation starts because they spoke first.
+Una story nombra un problema, una pregunta permite responder «soy yo» y después
+se contesta a cada persona. La conversación empieza porque la otra persona
+habló primero. Las respuestas automáticas a palabras clave solo se usan si ya
+están configuradas con herramientas propias o partners aprobados.
 
-Automated keyword DM replies are a real, supported feature for professional
-accounts, through Instagram's own tools and approved partners. Bulk DMing
-people who did not interact is not, and it is what gets accounts restricted.
-The rule is simple: **they act first, then you reply.**
+## Salida
 
-## Output
+~~~text
+STORIES · martes · 5 pantallas
 
-The frames in order, each with what is on screen, what is said, and which
-sticker, plus what to do with the answers:
+1 [selfie]      «Tercera petición de devolución del año. Mismo motivo.»
+2 [grabación]   cláusula marcada
+3 [hablando]    «Aprobar es una sensación. Entregar es una fecha.»
+4 [encuesta]    «¿Te ha perjudicado una aprobación tardía?» Sí / Todavía no
+5 [foto]        «Responde y te envío la cláusula.»
 
-```
-STORIES  ·  Tuesday  ·  5 frames
+Después: responder a quienes voten Sí.
+~~~
 
-1  [selfie, walking]      "Third refund request this year. Same reason."
-2  [screen recording]     the clause, highlighted
-3  [talking]              "Approval is a feeling. Delivery is a date."
-4  [poll]                 "Have you been burned by a late approval?"  Yes / Not yet
-5  [text on photo]        "Reply and I will send you the clause."
-
-After: everyone who votes Yes gets a reply. That is the whole funnel.
-```
-
-Nothing is posted. The user posts it.
+No se publica. La persona lo sube.

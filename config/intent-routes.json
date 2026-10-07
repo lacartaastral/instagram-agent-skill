@@ -1,19 +1,19 @@
 {
   "schema_version": 1,
   "routes": [
-    {"intent": "reel", "skill": "ig-reel", "tier": 1, "examples": ["hazme un reel", "write a reel", "hook"]},
-    {"intent": "viral-research", "skill": "ig-viral", "tier": 1, "examples": ["qué está funcionando", "find viral videos", "swipe file"]},
-    {"intent": "caption", "skill": "ig-caption", "tier": 1, "examples": ["escribe el caption", "caption this", "hashtags"]},
-    {"intent": "carousel", "skill": "ig-carousel", "tier": 1, "examples": ["carousel", "slides", "swipe post"]},
-    {"intent": "story", "skill": "ig-story", "tier": 1, "examples": ["stories", "story sequence", "poll idea"]},
-    {"intent": "profile", "skill": "ig-profile", "tier": 1, "examples": ["optimiza mi perfil", "fix my bio"]},
-    {"intent": "plan", "skill": "ig-plan", "tier": 2, "examples": ["qué publicamos esta semana", "plan my week"]},
-    {"intent": "humanize", "skill": "ig-human", "tier": 0, "examples": ["humaniza", "remove AI slop", "suena a ChatGPT"]},
-    {"intent": "comment", "skill": "ig-comment", "tier": 1, "examples": ["comenta esto", "comment on this"]},
-    {"intent": "reply", "skill": "ig-reply", "tier": 1, "examples": ["responde a estos comentarios", "reply to these"]},
-    {"intent": "dm", "skill": "ig-dm", "tier": 1, "examples": ["qué DM envío", "follow up", "collab pitch"]},
-    {"intent": "repurpose", "skill": "ig-repurpose", "tier": 2, "examples": ["convierte este vídeo", "repurpose this", "turn this into reels"]},
-    {"intent": "audit", "skill": "ig-audit", "tier": 2, "examples": ["analiza estos resultados", "read my analytics", "audit my content"]}
+    {"intent": "reel", "skill": "ig-reel", "tier": 1, "examples": ["hazme un reel", "escribe un reel", "gancho"]},
+    {"intent": "viral-research", "skill": "ig-viral", "tier": 1, "examples": ["qué está funcionando", "busca vídeos virales", "archivo de referencias"]},
+    {"intent": "caption", "skill": "ig-caption", "tier": 1, "examples": ["escribe el caption", "pon texto a esto", "hashtags"]},
+    {"intent": "carousel", "skill": "ig-carousel", "tier": 1, "examples": ["carrusel", "diapositivas", "publicación deslizable"]},
+    {"intent": "story", "skill": "ig-story", "tier": 1, "examples": ["stories", "secuencia de stories", "idea para encuesta"]},
+    {"intent": "profile", "skill": "ig-profile", "tier": 1, "examples": ["optimiza mi perfil", "arregla mi bio"]},
+    {"intent": "plan", "skill": "ig-plan", "tier": 2, "examples": ["qué publicamos esta semana", "planifica mi semana"]},
+    {"intent": "humanize", "skill": "ig-human", "tier": 0, "examples": ["humaniza esto", "quita la paja de IA", "suena a ChatGPT"]},
+    {"intent": "comment", "skill": "ig-comment", "tier": 1, "examples": ["comenta esto", "comenta esta publicación"]},
+    {"intent": "reply", "skill": "ig-reply", "tier": 1, "examples": ["responde a estos comentarios", "contesta a estos"]},
+    {"intent": "dm", "skill": "ig-dm", "tier": 1, "examples": ["qué DM envío", "haz seguimiento", "propuesta de colaboración"]},
+    {"intent": "repurpose", "skill": "ig-repurpose", "tier": 2, "examples": ["convierte este vídeo", "reutiliza esto", "convierte esto en reels"]},
+    {"intent": "audit", "skill": "ig-audit", "tier": 2, "examples": ["analiza estos resultados", "lee mis analíticas", "audita mi contenido"]}
   ],
-  "ambiguity": "ask for one missing profile, speaker, or intent decision; never merge state from multiple profiles"
+  "ambiguity": "pedir una sola decisión que falte sobre perfil, speaker o intención; nunca mezclar estado de varios perfiles"
 }

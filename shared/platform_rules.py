@@ -1,8 +1,9 @@
-"""Load and merge mutable Instagram platform rules.
+"""Carga y combinación de reglas mutables de la plataforma Instagram.
 
-The skills keep mutable platform claims in JSON so a verification update does
-not require editing thirteen prompts or a Python heuristic.  Values may be
-present while still marked unverified; callers must surface that status.
+Las skills mantienen las afirmaciones mutables de la plataforma en JSON para
+que una actualización de verificación no obligue a editar trece prompts ni una
+heurística Python. Puede haber valores presentes marcados como no verificados;
+quien llama debe mostrar ese estado.
 """
 from __future__ import annotations
 
@@ -26,7 +27,7 @@ def _merge(base: dict[str, Any], overlay: dict[str, Any]) -> dict[str, Any]:
 
 
 def load_rules(path: str | Path | None = None) -> dict[str, Any]:
-    """Load package defaults, optionally overlaid by a profile rules file."""
+    """Carga los valores por defecto y, si existe, las reglas del perfil."""
     with DEFAULT_RULES_PATH.open(encoding="utf-8") as handle:
         base = json.load(handle)
     if path is None:
@@ -40,7 +41,7 @@ def load_rules(path: str | Path | None = None) -> dict[str, Any]:
 
 
 def rule_entry(rules: dict[str, Any], dotted_key: str) -> dict[str, Any]:
-    """Return a rule object by dotted key, or an empty object when absent."""
+    """Devuelve una regla por clave con puntos, o un objeto vacío si falta."""
     node: Any = rules.get("rules", rules)
     for part in dotted_key.split("."):
         if not isinstance(node, dict):
@@ -59,7 +60,7 @@ def rule_verified(rules: dict[str, Any], dotted_key: str) -> bool:
 
 
 def unverified_rule_keys(rules: dict[str, Any]) -> list[str]:
-    """Return dotted keys for present rules not independently verified."""
+    """Devuelve las claves con puntos de las reglas no verificadas."""
     found: list[str] = []
 
     def walk(node: Any, prefix: str = "") -> None:

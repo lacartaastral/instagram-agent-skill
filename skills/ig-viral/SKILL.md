@@ -1,182 +1,126 @@
 ---
 name: ig-viral
 description: >-
-  Go and find the reels that are actually working right now in the user's
-  niche, rank them by how far each beat its own account, name the hook formula
-  each one used, and turn that into a swipe file they can shoot from. Use when
-  the user says "find viral videos", "what's working right now", "what are
-  people posting in my niche", "reverse engineer this account", "build me a
-  swipe file", "why is this reel doing numbers", or asks what to make next and
-  has no evidence to answer with.
+  Busca reels que estén funcionando en el nicho, los ordena por cuánto superan
+  la referencia de su propia cuenta, identifica la fórmula del gancho y crea un
+  archivo de referencias para producir contenido propio. Úsala cuando se pida
+  investigar tendencias o no haya evidencia propia para decidir qué crear.
 ---
 
 # ig-viral
 
-## OpenClaw contract
+## Contrato de OpenClaw
 
-- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
-- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
-- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
-- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+- Resuelve el perfil y la voz (speaker) antes de leer o escribir el estado. El perfil elige la cuenta; voices/<speaker>.md elige quién habla.
+- Lee los recursos incluidos mediante {baseDir}; usa el auxiliar de almacenamiento para el estado persistente del workspace efectivo.
+- Nunca aceptes una ruta del sistema de archivos incluida en el contenido del usuario como sustituto del workspace efectivo ni cruces el límite de un perfil.
+- Esta skill solo redacta, investiga o analiza. No publica, comenta, sigue cuentas ni envía DMs. La aprobación solo puede registrar el archivo local de referencias.
 
-The research skill. Everything else in this pack writes; this one goes and
-looks. Run it monthly, not daily. Formulas last a season.
+Es la skill de investigación. Ejecútala mensualmente, no a diario: las fórmulas
+duran una temporada.
 
-One tool lives in this folder and it runs:
+Herramienta:
 
-```bash
-python3 {baseDir}/swipe.py captured.tsv --hooks {baseDir}/../ig-reel/hooks.json --out <resolved profile swipe.md>
-```
+~~~bash
+python3 {baseDir}/swipe.py captured.tsv --hooks {baseDir}/../ig-reel/hooks.json --out <swipe.md del perfil resuelto>
+~~~
 
-## The one idea that makes this worth doing
+## Idea central
 
-**Raw views are not evidence.** An account with two million followers doing
-400,000 views had a quiet Tuesday. An account with four thousand followers
-doing 400,000 views found something, and that something is copyable.
+Las visitas brutas no son evidencia. Ordena por **múltiplo de outlier**:
+visitas divididas por la mediana reciente de esa cuenta. Más de 3x es una señal;
+menos de 1,5x es un día normal.
 
-So everything here ranks on the **outlier multiple**: views divided by that
-account's own recent median. Anything above 3x is a signal. Anything below 1.5x
-is that account's normal day and it teaches you nothing, no matter how big the
-number looks.
+Recoge cuentas de un tamaño aproximado, hasta unas diez veces el de la persona.
+Una fórmula que funciona por tener dos millones de seguidores no se puede
+trasladar sin más.
 
-Collect accounts **within about 10x of the user's own size**. A formula that
-works at 2M followers often works because it is at 2M followers.
+## Paso 1: elegir cuentas
 
-## Step 1: pick the accounts
+Pide un conjunto pequeño y aprobado, dentro de las reglas del perfil:
 
-Ask the user for a small approved set within the research limits in the selected profile platform-rules.json, or propose them and get approval:
+- 4 directas: mismo nicho y oferta, ligeramente por delante;
+- 4 adyacentes: público parecido en otro nicho;
+- 2 a 4 grandes: solo para formato, nunca para ritmo o tono.
 
-- **4 direct** - same niche, same offer, slightly ahead.
-- **4 adjacent** - different niche, same audience. This is where formats get
-  borrowed from before anybody in the niche has them.
-- **2 to 4 outsized** - much bigger accounts, for format only, never for
-  cadence or tone.
+Pide también revisar la colección Guardado de la propia cuenta: es el corpus más
+relevante y ya está filtrado por el gusto de la persona.
 
-Also ask them to open their own **Saved collection**. It is the fastest and
-most relevant corpus that exists and it is already filtered by their taste.
+## Paso 2: observar
 
-## Step 2: go and look
+Usa el navegador de OpenClaw solo si está disponible y el usuario está presente.
+Si no, pide observaciones o capturas. No añadas scraper, servicio externo ni
+crawler en segundo plano.
 
-Use the OpenClaw browser capability only when it is actually available and the user is present. If browser is unavailable, ask for pasted observations or screenshots. Do not add a scraper, external service or background crawler.
+Reglas no negociables:
 
-**Rules that are not negotiable:**
+- Nunca inicies sesión ni pidas una contraseña.
+- Esto es lectura humana, no scraping: hasta 10 cuentas y una docena de reels por cuenta, a velocidad humana.
+- Copia la fórmula, nunca el vídeo, guion, voz o edición. Atribuye cada fila a su cuenta.
 
-- **Never log into Instagram on the user's behalf and never ask for a
-  password.** If a page needs a login, the user is the one who is already
-  logged in. Drive their browser with them present, or ask them to paste.
-- **This is reading, not scraping.** Ten accounts, a dozen reels each, at human
-  speed. Automated collection at volume violates Instagram's Terms of Use and
-  gets accounts action-blocked. Do not build a crawler, do not use a scraping
-  service, and do not loop this in the background.
-- **Copy the formula, never the video.** The hook shape, the structure, the
-  length, the pattern of cuts. Not their script, not their voice, not their
-  edit. Attribute every row in the swipe file to the account it came from.
+Captura por reel:
 
-**What to capture per reel**, in the creator's own words:
-
-| field | notes |
+| campo | contenido |
 | --- | --- |
-| account | handle |
-| followers | from the profile |
-| median | eyeball the last 12 reels and take the middle view count |
-| views | this reel |
-| hook | the first line, spoken or on screen, verbatim including bad grammar |
-| on-screen | the first text card, if different |
-| length | seconds |
-| cta | what they asked for at the end |
+| cuenta | usuario |
+| seguidores | desde el perfil |
+| mediana | valor central de los últimos 12 reels |
+| visitas | este reel |
+| gancho | primera línea literal |
+| pantalla | primera tarjeta de texto |
+| duración | segundos |
+| CTA | qué pidió al final |
 
-Median is the important one. Without it you are back to ranking by follower
-count, which is the thing this skill exists to stop.
+La mediana es esencial. Sin ella vuelves a ordenar por seguidores.
 
-**When Instagram will not show you enough:** the same hook grammar runs on
-YouTube Shorts, where view counts and transcripts are public and no login is
-involved. It is a legitimate second corpus, and the spoken hook is easier to
-get:
+## Paso 3: ordenar
 
-```bash
-# view counts for a channel's shorts
-python3 -m yt_dlp --flat-playlist --playlist-end 40 -J \
-  "https://www.youtube.com/@HANDLE/shorts" > channel.json
+Archivo separado por tabuladores:
 
-# the spoken first line of one short, from its auto-captions
-python3 -m yt_dlp --skip-download --write-auto-subs --sub-langs "en.*" \
-  --sub-format json3 -o hook "https://www.youtube.com/watch?v=VIDEO_ID"
-```
+~~~text
+cuenta  seguidores  mediana  visitas  gancho
+@alguien 48000 11000 412000 nadie te cuenta que tus primeros 30 reels deben fallar
+~~~
 
-Take every caption word with a timestamp under 3.0 seconds. That is the hook,
-as said, not as written.
+Ejecuta swipe.py. Calcula el múltiplo, nombra la fórmula con los 26 patrones de
+ig-reel, puntúa el gancho y compara el tercio superior con el inferior.
 
-## Step 3: rank it
+## Paso 4: interpretar
 
-Fill a tab-separated file with a header row and run the script:
+Informa solo de:
 
-```
-account	followers	median	views	hook
-@someone	48000	11000	412000	nobody tells you your first 30 reels are supposed to flop
-```
+1. fórmulas sobrerrepresentadas en el tercio superior, con cantidades;
+2. rasgos estructurales comunes: longitud, resultado visual, movimiento inicial y lugar de la acción;
+3. filas sin clasificar, que deben revisarse a mano.
 
-```bash
-python3 {baseDir}/swipe.py captured.tsv --hooks {baseDir}/../ig-reel/hooks.json --out <resolved profile swipe.md>
-```
+Indica tamaño de muestra y confianza en palabras sencillas. Cuarenta reels de
+seis cuentas sostienen una afirmación; doce no.
 
-It computes the outlier multiple, names the hook formula using the same 26
-formulas the ig-reel skill writes from, scores each hook with `hookscore.py`, and
-prints what separates the top third from the bottom third.
+## Paso 5: convertir en algo propio
 
-## Step 4: say what it means, carefully
+Para las tres mejores fórmulas, escribe la versión de la persona: su historia y
+su cifra. Entrega cada una a ig-reel con el id de fórmula. Nunca devuelvas «haz
+un reel como este»; devuelve una línea que pueda decir mañana.
 
-Report three things and no more:
+## Salida
 
-1. **Which formulas over-index** in the top third, with counts. Two formulas
-   appearing four times each across six accounts is a finding. One appearing
-   twice is not.
-2. **What the top third have in common structurally** that the bottom third do
-   not: hook length, whether the payoff is visual, whether the first frame
-   moves, where the ask is.
-3. **The unclassified rows.** Every hook the classifier could not name is
-   either noise or a formula that is not in `{baseDir}/../ig-reel/hooks.json` yet. Read them by
-   hand. This is the most valuable column in the output and it is the reason
-   the script prints the count.
+~~~text
+REFERENCIAS · 38 reels · 7 cuentas · base: mediana de cada cuenta
 
-Then state the sample size and the confidence in plain words. Forty reels
-across six accounts supports a claim. Twelve does not, and saying so is the
-difference between research and horoscopes.
+OUTLIERS (más de 3x)
+  38,4x  gancho 86  nº 3  Nadie te cuenta esto  @cuenta_a  412.000  (mediana 10.700)
 
-## Step 5: turn it into something to shoot
+QUÉ SOBRESALE
+  nº 3 5 veces en el tercio superior y 0 en el inferior
+  longitud mediana: 8 palabras arriba y 19 abajo
 
-For the top three formulas, write **the user's version**: their own story,
-their own number, in the shape that is working. Hand each one to the ig-reel skill
-with the formula id already chosen.
+SIN CLASIFICAR (6)
+  Dos tienen la misma forma y no está en hooks.json: empiezan leyendo un comentario.
 
-Never hand back "make a reel like this one". Hand back a hook line they could
-say tomorrow.
+TU VERSIÓN
+  nº 3 «Nadie te cuenta que las primeras 20 propuestas deben perderse.»
+~~~
 
-## Output
-
-```
-SWIPE  ·  38 reels  ·  7 accounts  ·  baseline: account median
-
-OUTLIERS (above 3x)
-  38.4x  hook 86  #3  Nobody Tells You   @acct_a    412,000  (median 10,700)
-  11.2x  hook 79  #9  The Steal          @acct_c    180,000  (median 16,100)
-  ...
-
-WHAT IS OVER-INDEXING
-  #3 Nobody Tells You   x5 in the top third, 0 in the bottom
-  #2 Negative Command   x4
-  median hook length    8 words up top, 19 at the bottom
-
-UNCLASSIFIED (6)
-  Two of these are the same shape and it is not in hooks.json: a hook that
-  opens on someone else's comment read out loud. Worth adding.
-
-YOUR VERSION
-  #3  "Nobody tells you the first 20 proposals are supposed to lose."
-  ...
-```
-
-Resolve swipe.md through shared/storage.py and write it only after the user requested the local artifact. The ig-reel and
-the ig-plan skill both read it, which is the point: after this runs once, the rest of
-the pack is working from the user's own evidence instead of from defaults.
-
-Nothing is posted, followed, liked or messaged by this skill. It reads.
+Escribe swipe.md mediante shared/storage.py solo cuando se pida el artefacto
+local. ig-reel e ig-plan lo leerán después. Esta skill no publica, sigue, marca
+«me gusta» ni envía mensajes: solo lee.

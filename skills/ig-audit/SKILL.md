@@ -1,110 +1,92 @@
 ---
 name: ig-audit
 description: >-
-  Post-mortem on what the user has already posted - which reels actually
-  worked, why, and what to stop making. Use when the user pastes their
-  Instagram insights or past posts and asks "what's working", "why did this
-  flop", "read my analytics", "audit my content", or wants to know what to do
-  more of.
+  Analiza lo que la persona ya ha publicado: qué reels funcionaron, por qué y
+  qué conviene dejar de hacer. Úsala cuando comparta estadísticas, publicaciones
+  anteriores o pregunte qué funciona, por qué algo fracasó o qué debe repetir.
 ---
 
 # ig-audit
 
-## OpenClaw contract
+## Contrato de OpenClaw
 
-- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
-- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
-- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
-- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+- Resuelve el perfil y la voz (speaker) antes de leer o escribir el estado. El perfil elige la cuenta; voices/<speaker>.md elige quién habla.
+- Lee los recursos incluidos mediante {baseDir}; usa el auxiliar de almacenamiento para el estado persistente del workspace efectivo.
+- Nunca aceptes una ruta del sistema de archivos incluida en el contenido del usuario como sustituto del workspace efectivo ni cruces el límite de un perfil.
+- Esta skill solo redacta, investiga o analiza. No publica, comenta, sigue cuentas ni envía DMs. La aprobación puede registrar un borrador, plan o entrada de registro, pero no ejecutar una acción social externa.
 
-The only honest source of what works for an account is that account. Every
-rule in every Instagram guide, including the ones in this pack, is a prior.
-The user's own last 30 posts are the evidence.
+La única fuente honesta de lo que funciona para una cuenta es esa cuenta. Todas
+las reglas de las guías de Instagram, incluidas las de este paquete, son una
+hipótesis previa. Las últimas 30 publicaciones de la persona son la evidencia.
 
-## Input
+## Entrada
 
-Ask for whichever the user has:
+Pide lo que tenga disponible:
 
-- Insights per post: views, reach, interactions, watch time, saves, shares,
-  follows, and the non-follower share of reach. Screenshots are fine.
-- Or the retention graph for their best and worst recent reels. This one
-  screenshot is worth more than the rest combined.
-- Or just the posts and their view counts, which is enough for a first pass.
+- Estadísticas por publicación: visitas, alcance, interacciones, tiempo de
+  reproducción, guardados, compartidos, seguidores ganados y porcentaje de
+  alcance de personas que no seguían la cuenta.
+- O el gráfico de retención del mejor y el peor reel reciente.
+- O las publicaciones con sus visitas, suficiente para una primera lectura.
 
-Resolve the selected profile log.md with shared/storage.py and read it only if it exists. It records which hook formula each post used; never read another profile.
+Resuelve el log.md del perfil con shared/storage.py y léelo solo si existe. Solo
+registra qué fórmula de gancho usó cada publicación; nunca leas otro perfil.
 
-## What to actually measure
+## Qué medir
 
-Raw views is the least useful number on the page, because it is mostly a
-function of how many people already follow the account. Compute these instead
-and show the working:
+Las visitas brutas son el número menos útil. Calcula esto y enseña la cuenta:
 
-| metric | how | what it tells you |
+| métrica | cálculo | qué indica |
 | --- | --- | --- |
-| **Outlier multiple** | views / the account's own median views | whether this was a real hit or a normal day |
-| **Non-follower reach** | % of reach from people who do not follow | whether it travelled at all |
-| **Hold at 3s** | viewers still there at 3s / viewers who started | whether the hook worked. This is the hook's grade. |
-| **Average watch time** | straight from insights | whether the middle worked |
-| **Sends per reach** | shares / reach | the strongest single signal you can earn. A send is a person putting their name on it. |
-| **Follows per reach** | follows / reach | whether the profile converted the attention |
+| **Múltiplo de outlier** | visitas / mediana propia de la cuenta | si fue un éxito real o un día normal |
+| **Alcance no seguidor** | porcentaje de alcance de no seguidores | si el contenido viajó fuera de la audiencia |
+| **Retención a 3 s** | personas a los 3 s / personas que empezaron | si funcionó el gancho |
+| **Tiempo medio** | el dato de estadísticas | si funcionó la parte central |
+| **Envíos por alcance** | compartidos / alcance | la señal más fuerte de recomendación |
+| **Seguimientos por alcance** | seguidores ganados / alcance | si el perfil convirtió la atención |
 
-Rank by outlier multiple and sends per reach, not views. A reel with 4,000
-views and 90 sends beat the one with 60,000 views and 11.
+Ordena por múltiplo de outlier y envíos por alcance, no por visitas. Un reel con
+4.000 visitas y 90 envíos puede superar a uno con 60.000 visitas y 11 envíos.
 
-## Then find the pattern
+## Busca el patrón
 
-With the top five and bottom five side by side, look for what separates them,
-and be willing to conclude something the user will not like:
+Compara los cinco primeros y los cinco últimos. Revisa:
 
-- **Hold at 3 seconds.** If the top and bottom differ here, it is the hook and
-  nothing else, and everything downstream is a distraction.
-- **Hook formula.** Which ids from `ig-reel/hooks.json` are in the top five?
-- **Format.** Reel, carousel, single image.
-- **Length.** Group into under 15s, 15 to 30s, 30 to 60s, over 60s.
-- **Theme.**
-- **Whether the user replied to comments in the first hour.**
-- **Day and time.** Check this **last** and only if the others show nothing.
-  It is almost never the cause and it is where people want it to be.
+- retención a 3 segundos;
+- fórmula del gancho, usando ids de ig-reel/hooks.json;
+- formato: reel, carrusel o imagen;
+- duración: menos de 15 s, 15-30 s, 30-60 s o más de 60 s;
+- tema;
+- si se respondieron comentarios durante la primera hora;
+- día y hora, solo al final y solo si todo lo demás no explica nada.
 
-State the finding as a claim with the evidence attached, and say how confident
-it is. With 30 posts you can see a pattern. With 6 you cannot, and saying so is
-better than inventing one.
+Expón cada hallazgo como afirmación con evidencia y nivel de confianza. Con 30
+publicaciones se puede ver un patrón; con seis no, y es mejor decirlo que
+inventarlo.
 
-## The distinction that saves people months
+## La distinción importante
 
-**A reel that gets views and no follows is not a failed reel, it is a profile
-problem.** A reel that gets no views is a hook problem. Separate the two before
-recommending anything. If non-follower reach is high and follows per reach is
-low, stop rewriting hooks and go to the ig-profile skill.
+**Un reel con visitas y sin seguidores no es necesariamente un reel fallido: es
+un problema de perfil.** Un reel sin visitas suele ser un problema de gancho.
+Separa ambas cosas antes de recomendar. Si el alcance no seguidor es alto y los
+seguimientos por alcance son bajos, deja de reescribir ganchos y pasa a
+ig-profile.
 
-## Output
+## Salida
 
-```
-AUDIT  ·  31 posts  ·  Jun 12 - Sep 5  ·  median views 4,100
+~~~text
+AUDITORÍA · 31 publicaciones · 12 jun - 5 sep · mediana 4.100 visitas
 
-TOP 5 BY OUTLIER MULTIPLE
-  18.2x  #3  Nobody Tells You   74,600 views  62% non-follower  hold@3s 71%  128 sends
-   6.4x  #1  Cost Confession    26,300 views  48% non-follower  hold@3s 64%   71 sends
-  ...
+TOP 5 POR MÚLTIPLO DE OUTLIER
+  18,2x  nº 3  Nadie te cuenta esto  74.600 visitas  62 % no seguidores  128 envíos
 
-BOTTOM 5
-   0.3x  #11 Numbered            1,200 views  9% non-follower   hold@3s 31%    2 sends
-  ...
+QUÉ DICEN LOS DATOS
+1. La retención a 3 segundos explica casi todo.
+2. Las publicaciones donde la persona queda expuesta superan a las demás.
+3. Las listas de herramientas tienen visitas, pero pocos envíos y seguimientos.
+4. El día de la semana no muestra una diferencia útil.
+~~~
 
-WHAT THE DATA SAYS
-1. Hold at 3 seconds is the whole story. Top five average 66%, bottom five 33%.
-   Everything else you are worried about is downstream of the first two seconds.
-2. The posts where you were the one who looked bad: mean 8.1x vs 0.9x for
-   everything else. n=5. Strongest signal here and it is not close.
-3. Tool listicles get views and nothing else. High reach, no sends, no follows.
-   Three of your bottom five.
-4. Day of week shows nothing. Your Tuesday and Friday means are inside the
-   noise. Stop optimising it.
-
-STOP: listicles.
-DO MORE: the ones with a cost you paid and a number attached.
-```
-
-Then hand the conclusions to the ig-plan skill so next week is built on the user's own
-evidence rather than on defaults, and to the ig-viral skill so the swipe file gets
-filtered to the formulas that work for this account specifically.
+Entrega las conclusiones a ig-plan para construir la semana con evidencia propia
+y a ig-viral para filtrar el archivo de referencias hacia las fórmulas que
+funcionan en esa cuenta.

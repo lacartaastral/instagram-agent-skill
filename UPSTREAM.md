@@ -1,38 +1,42 @@
-# Upstream tracking
+# Seguimiento del repositorio de origen
 
-## Baseline
+## Commit base
 
-- upstream repository: https://github.com/Jakeschincariol/instagram-agent-skill
-- fork repository: https://github.com/lacartaastral/instagram-agent-skill
-- baseline commit: d03c56bb598be770c60b201f94237e5d1a4268a6
-- baseline date observed: 2026-10-07
-- local branch: openclaw/multiperfil-governed
+- Repositorio de origen: https://github.com/Jakeschincariol/instagram-agent-skill
+- Fork: https://github.com/lacartaastral/instagram-agent-skill
+- Commit base: d03c56bb598be770c60b201f94237e5d1a4268a6
+- Fecha observada del commit base: 2026-10-07
+- Rama local: openclaw/multiperfil-governed
 
-The baseline was cloned and checked out before any fork-specific edits. The
-original MIT license and attribution remain intact.
+El commit base se clonó y se dejó en su referencia correspondiente antes de aplicar
+cualquier cambio propio del fork. La licencia MIT y la atribución original se
+mantienen intactas.
 
-## Intentional fork seams
+## Límites intencionados del fork
 
-- skills/*/SKILL.md: preserve the editorial contracts, replace assistant-
-  specific paths with OpenClaw {baseDir} resource resolution and add the
-  profile/speaker/approval boundary.
-- skills/*/*.py and JSON resources: preserve deterministic behavior; only add
-  the smallest resource/configuration changes needed for OpenClaw profile rules.
-- shared/: new deterministic storage, rules and model-routing contracts.
-- config/: new intent routes, model policy snapshot and mutable platform rules.
-- skills/ig-router/: new thin OpenClaw orchestrator; it does not draft or act.
-- The upstream-specific plugin manifest is intentionally removed because this
-  fork is discovered as native OpenClaw skills.
+- skills/*/SKILL.md: conserva los contratos editoriales, sustituye las rutas
+  específicas del sistema original por la resolución de recursos OpenClaw con
+  {baseDir} y añade el límite de perfil, voz (speaker) y aprobación.
+- skills/*/*.py y recursos JSON: conserva el comportamiento determinista y solo
+  añade los cambios mínimos necesarios para las reglas por perfil de OpenClaw.
+- shared/: contratos nuevos y deterministas para almacenamiento, reglas y
+  enrutamiento de modelos.
+- config/: rutas de intención, instantánea de política de modelos y reglas
+  mutables de plataforma.
+- skills/ig-router/: orquestador fino de OpenClaw; no redacta ni actúa.
+- El manifiesto específico del sistema de origen se elimina porque este fork se
+  descubre como skills nativas de OpenClaw.
 
-## Safe update procedure
+## Procedimiento seguro de actualización
 
-1. Fetch upstream without changing the current working tree.
-2. Inspect the diff against this baseline, especially skill paths, platform
-   numbers and any action verbs.
-3. Merge with --no-commit into the governed branch.
-4. Reapply/update tests and central rule metadata if upstream changed behavior.
-5. Run the full deterministic suite, compile checks, git diff --check, and
-   OpenClaw discovery validation.
-6. Commit the merge as a reviewable change. Never overwrite the fork config or
-   state and never accept a change that adds publishing, broad scraping or
-   cross-profile reads.
+1. Descarga el repositorio de origen sin cambiar el árbol de trabajo actual.
+2. Inspecciona el diff contra este baseline, especialmente las rutas de skills,
+   las cifras de plataforma y cualquier verbo que implique una acción.
+3. Haz el merge con --no-commit en la rama gobernada.
+4. Reaplica o actualiza los tests y los metadatos de reglas si el origen cambió
+   el comportamiento.
+5. Ejecuta la suite determinista completa, compileall, git diff --check y la
+   validación de discovery de OpenClaw.
+6. Confirma el merge como un cambio revisable. Nunca sobrescribas la
+   configuración ni el estado del fork y nunca aceptes cambios que añadan
+   publicación, scraping amplio o lecturas entre perfiles.

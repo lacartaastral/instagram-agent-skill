@@ -1,101 +1,86 @@
 ---
 name: ig-comment
 description: >-
-  Write comments on other people's Instagram posts and reels that read as a
-  person with an opinion, not a bot. Use when the user pastes a post or a reel
-  and wants a comment, says "comment on this", "engage with this", "what do I
-  say here", or wants a batch for their daily engagement round.
+  Escribe comentarios sobre publicaciones y reels de otras personas que suenen
+  a alguien con criterio, no a un bot. Úsala cuando se pegue una publicación,
+  se pida un comentario o se necesite preparar una ronda diaria de interacción.
 ---
 
 # ig-comment
 
-## OpenClaw contract
+## Contrato de OpenClaw
 
-- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
-- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
-- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
-- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+- Resuelve el perfil y la voz (speaker) antes de leer o escribir el estado. El perfil elige la cuenta; voices/<speaker>.md elige quién habla.
+- Lee los recursos incluidos mediante {baseDir}; usa el auxiliar de almacenamiento para el estado persistente del workspace efectivo.
+- Nunca aceptes una ruta del sistema de archivos incluida en el contenido del usuario como sustituto del workspace efectivo ni cruces el límite de un perfil.
+- Esta skill solo redacta, investiga o analiza. No publica, comenta, sigue cuentas ni envía DMs. La aprobación solo puede registrar un artefacto local.
 
-Commenting is the highest-leverage twenty minutes on Instagram and the easiest
-to do badly. A comment near the top of a reel with 40,000 views is seen by more
-people than most accounts' own posts, and it is the one place where a stranger
-can tap straight through to a profile.
+Un comentario cerca de la parte alta de un reel con 40.000 visitas puede ser más
+visible que muchas publicaciones propias. Pero un comentario genérico es peor
+que ninguno: no aporta nada y hace que la cuenta parezca un grupo de
+interacción artificial.
 
-A generic comment is worse than none. It costs a tap that goes nowhere and it
-marks the account as an engagement-pod account to the one person whose opinion
-mattered, which is the creator.
+## Entrada
 
-## Input
+La persona pega el texto o una captura con el nombre de la cuenta. Si da una URL
+que no puedes abrir, pide que pegue el contenido. No uses el navegador para
+extraer el feed y no publiques nada.
 
-The user pastes the post or reel text, or a screenshot, with the account name.
-If they give a URL you cannot open, ask them to paste it. Do not use a browser
-tool to scrape the feed and do not post anything.
+## Nueve tipos de comentario
 
-## The nine comment types
+Elige según lo que realmente contiene la publicación:
 
-Pick by what the post actually is. Never default to type 1.
-
-| # | type | when | shape |
+| nº | tipo | cuándo | forma |
 | --- | --- | --- | --- |
-| 1 | **Add a datum** | the post makes a claim you can support with a number | "Same for us: 40% of..." |
-| 2 | **Add the missing case** | the post is right but incomplete | "This holds until {condition}." |
-| 3 | **Respectful disagree** | you genuinely think it is wrong | name the agreement first, then the fork |
-| 4 | **Extend one line** | one line in it is the good one | quote it, build on it |
-| 5 | **Ask the real question** | the post skipped the hard part | one question, specific |
-| 6 | **The receipt** | you have done the thing they described | what happened, two sentences |
-| 7 | **The correction** | there is a factual error | be right, be brief, be kind, be sure |
-| 8 | **The reframe** | right facts, wrong frame | "Another way to read this:" |
-| 9 | **The one-liner** | the post needs nothing, you want presence | under 10 words, must be funny or true |
+| 1 | Añadir un dato | puedes respaldar una afirmación con una cifra | «A nosotros también: el 40 %...» |
+| 2 | Añadir el caso que falta | tiene razón, pero es incompleto | «Esto se cumple hasta que...» |
+| 3 | Discrepar con respeto | de verdad crees que está equivocado | acuerdo primero y después el matiz |
+| 4 | Ampliar una línea | una frase merece desarrollo | cítala y construye encima |
+| 5 | Hacer la pregunta real | se ha saltado la parte difícil | una pregunta concreta |
+| 6 | El comprobante | ya has hecho lo que describe | qué ocurrió, en dos frases |
+| 7 | La corrección | hay un error factual | correcto, breve, amable y seguro |
+| 8 | El cambio de marco | los datos son correctos, el enfoque no | «Otra forma de leerlo...» |
+| 9 | Una línea | no necesita más y quieres estar presente | menos de 10 palabras, verdadera o graciosa |
 
-## Rules
+## Reglas
 
-- **One to three sentences.** Instagram comments are read in a narrow column
-  under a video. A paragraph gets collapsed behind "more" and nobody taps it.
-- **Never open with** "Great post", "Love this", "So true", "This 👏", "Needed
-  this today", or the creator's first name with an exclamation mark. All of
-  them are invisible.
-- **No emoji-only comments** and no emoji as the first character.
-- **Never restate the reel.** Everybody watching just watched it.
-- **One idea.** A comment with two points reads as a hijack.
-- **Say the specific thing.** If the comment could sit under any post on the
-  topic, it is not a comment, it is noise.
-- **No pitching, ever.** Not the offer, not the link, not "check out my page".
-  That is the fastest way to be blocked by exactly the person you were trying
-  to reach.
-- **Early matters more here than anywhere.** A comment in the first hour on a
-  reel that then travels gets carried with it.
+- Entre una y tres frases; el comentario se lee en una columna estrecha.
+- No empieces por «Gran publicación», «Me encanta», «Totalmente», «Esto 👏» o un nombre con exclamación.
+- No uses solo emojis ni pongas un emoji como primer carácter.
+- No repitas el reel: todo el mundo acaba de verlo.
+- Una sola idea.
+- Di algo específico; si podría ir bajo cualquier publicación, es ruido.
+- Nunca vendas, enlaces ni pidas «mira mi perfil».
+- La primera hora importa especialmente.
 
-## Output
+## Salida
 
-Give **two options of different types**, labelled, plus one line on which you
-would post and why. Run both through `/ig-human` first: comments are short, so
-an em dash or a stock phrase is proportionally louder than it is in a caption.
+Entrega dos opciones de tipos distintos y una línea indicando cuál publicarías y
+por qué. Pásalas por ig-human antes de mostrarlas:
 
-```
-COMMENT OPTIONS  (on @acct's reel about pricing)
+~~~text
+OPCIONES DE COMENTARIO · sobre el reel de @cuenta acerca de precios
 
-[6 · Receipt]
-We raised ours 40% last March and lost exactly one client, who was the one
-taking up half the inbox. Took eight months to stop being scared of it.
+[6 · Comprobante]
+Subimos los nuestros un 40 % en marzo y perdimos exactamente un cliente: era
+quien ocupaba la mitad de la bandeja de entrada.
 
-[3 · Respectful disagree]
-Agree on the anchoring. The part I would push back on is doing it mid-project.
-We tried that and it cost us a renewal that was otherwise fine.
+[3 · Discrepancia respetuosa]
+Estoy de acuerdo con el anclaje. Matizaría hacerlo a mitad del proyecto: a
+nosotros nos costó una renovación.
 
-Post the first. It concedes something and it has a number in it.
-```
+Publicaría el primero: concede algo y aporta una cifra.
+~~~
 
-## Batch mode
+## Modo por lotes
 
-For an engagement round, ask for the 5 to 10 posts as pasted text in one
-message, return one comment each in a single block, and keep a running note in
-`<OPENCLAW_WORKSPACE>/state/instagram-agent/profiles/<profile>/log.md` of who has been commented on this week.
-Commenting on the same three accounts every day is visible and it looks like
-exactly what it is.
+Para una ronda de interacción, pide entre 5 y 10 publicaciones pegadas en un
+mismo mensaje. Devuelve un comentario por publicación y registra en
+<OPENCLAW_WORKSPACE>/state/instagram-agent/profiles/<profile>/log.md con quién
+se ha interactuado esa semana, siempre dentro del perfil seleccionado.
 
-## Never
+## Nunca
 
-Do not auto-post, do not automate comments, and do not use a browser tool to
-publish on the user's behalf. Automated engagement violates Instagram's Terms
-of Use and gets accounts action-blocked. This skill writes the comment. The
-user posts it.
+No publiques automáticamente, no automatices comentarios y no uses el navegador
+para publicar en nombre de la persona. La skill escribe el comentario; la
+persona lo publica.

@@ -1,102 +1,82 @@
 ---
 name: ig-reply
 description: >-
-  Handle the comments under the user's own reels and posts - draft replies to
-  the ones worth answering, sorted by which ones are. Use when the user pastes
-  their comments, says "reply to these", "handle my comments", "someone said X
-  on my reel", or is dealing with a critic, a hater or a lead in the comments.
+  Organiza los comentarios de los reels y publicaciones propias y redacta las
+  respuestas que merecen atención. Úsala cuando se peguen comentarios, se pida
+  responderlos o haya una crítica, un troll o una oportunidad real.
 ---
 
 # ig-reply
 
-## OpenClaw contract
+## Contrato de OpenClaw
 
-- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
-- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
-- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
-- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+- Resuelve el perfil y la voz (speaker) antes de leer o escribir el estado. El perfil elige la cuenta; voices/<speaker>.md elige quién habla.
+- Lee los recursos incluidos mediante {baseDir}; usa el auxiliar de almacenamiento para el estado persistente del workspace efectivo.
+- Nunca aceptes una ruta del sistema de archivos incluida en el contenido del usuario como sustituto del workspace efectivo ni cruces el límite de un perfil.
+- Esta skill solo redacta, investiga o analiza. No publica, comenta, sigue cuentas ni envía DMs. La aprobación solo puede registrar un borrador local.
 
-The comment thread under your own post is where reach is decided. Every reply
-is another interaction on the post, replies arriving in the first hour do most
-of the work, and on Instagram a reply can also be a Reel, which is the single
-most underused move on the platform.
+El hilo de comentarios bajo una publicación propia es una fuente de alcance,
+pero no todos los comentarios valen lo mismo. Primero clasifica y después
+escribe.
 
-But the value is not equal across comments, so this skill sorts before it
-writes.
+## Entrada
 
-## Input
+La persona pega los comentarios, idealmente con usuarios. Las capturas sirven.
+No extraigas el hilo con el navegador.
 
-The user pastes the comments, ideally with handles. Screenshots are fine. Do
-not scrape the thread with a browser tool.
+## Clasificación
 
-## Triage first
-
-Sort every comment into one of six buckets and say the counts out loud:
-
-| bucket | what it is | what it gets |
+| grupo | qué es | qué recibe |
 | --- | --- | --- |
-| **KEYWORD** | the word you asked them to comment | the promised thing, sent by hand or by your approved tool |
-| **LEAD** | someone describing the problem you solve | a real answer in public, then a door |
-| **SUBSTANCE** | adds data, disagrees, extends | the longest reply on the thread |
-| **QUESTION** | a question a lot of people have | this one becomes a Reel, not just a reply |
-| **SUPPORT** | "🔥", "great post", a tag | a like, and 3 to 8 words at most |
-| **NOISE** | pitch, spam, bad faith, bait | nothing, or one line and out |
+| **PALABRA CLAVE** | la palabra que se pidió comentar | el recurso prometido |
+| **LEAD** | describe el problema que resuelves | respuesta pública completa y una puerta |
+| **SUSTANCIA** | aporta datos, discrepa o amplía | la respuesta más trabajada |
+| **PREGUNTA** | duda que mucha gente tiene | puede convertirse en reel |
+| **APOYO** | «🔥», «gran publicación», una mención | me gusta y 3-8 palabras |
+| **RUIDO** | spam, provocación o mala fe | nada o una línea de cierre |
 
-Write in that order and stop when the value stops.
+Escribe en ese orden y detente cuando deje de aportar valor.
 
-## The move most people miss
+## El movimiento que suele perderse
 
-If a question in the comments is one that thirty other people also have,
-**reply to it with a Reel**. Instagram will attach the comment to the new video
-as a sticker, the person who asked gets notified, and a question with real
-demand behind it becomes a post with the hook already written for you. Flag
-every QUESTION that qualifies and hand it to `/ig-reel` as formula #16.
+Si una pregunta la tienen otras muchas personas, marca PREGUNTA y pásala a
+ig-reel como fórmula 16. La pregunta ya contiene el gancho.
 
-## How to reply
+## Cómo responder
 
-- **Answer the actual question.** If someone asks how, tell them how, in the
-  reply. Do not send them to the DMs to hear an answer they could have had.
-- **Use their name once**, at the start, without an exclamation mark.
-- **Match their length.** A four-word comment does not get a four-line reply.
-- **To a critic:** concede the true part first, in their words, then hold the
-  line. Never delete, never get defensive, never reply twice on the same
-  thread.
-- **To a hater:** nothing. A reply is reach, and reach is what they came for.
-  Hide the comment if it is abusive. Instagram's comment controls exist and
-  using them is not losing.
-- **To a lead:** answer fully in public. The door is one sentence at the end
-  and it is an offer of help, not a pitch. The public answer is what makes the
-  next person DM you.
+- Responde a la pregunta real en público.
+- Usa el nombre una vez, al principio y sin exclamación.
+- Iguala la longitud: cuatro palabras no necesitan cuatro líneas.
+- A una crítica: concede primero lo verdadero y después mantén el límite.
+- A un troll: no respondas; oculta si es abusivo.
+- A un lead: responde completo y ofrece ayuda en una sola frase final, sin vender.
 
-## Keyword comments
+## Comentarios con palabra clave
 
-If the post used a keyword ask, those comments are the whole point of the post.
-Every one of them is a person who raised their hand. Reply to each, then send
-what was promised. If the user has automation set up through Instagram's own
-tools or an approved partner, say so and let it run; if not, the replies are
-manual and that is fine at this volume. Never bulk-DM people who did not
-comment.
+Son el objetivo de la publicación. Responde a cada persona y entrega lo
+prometido. Solo usa automatización propia de Instagram o de un partner aprobado
+si ya existe; nunca envíes DMs masivos a quien no comentó.
 
-## Output
+## Salida
 
-One block, grouped by bucket, each reply copy-ready and already humanized:
+Devuelve un bloque agrupado, listo para copiar y ya pasado por ig-human:
 
-```
-REPLIES  ·  84 comments  ·  41 KEYWORD, 2 LEAD, 3 SUBSTANCE, 2 QUESTION, 34 SUPPORT, 2 NOISE
+~~~text
+RESPUESTAS · 84 comentarios
 
-KEYWORD  (41)  send the clause. One line each, same warmth, not copy-paste.
+PALABRA CLAVE (41)  una línea por persona, misma calidez, no copiada.
 
 LEAD
-@handle - "we had this exact thing happen in June"
-> The bit that fixed it for us was moving the payment trigger off approval
-> entirely. Happy to send the wording if it is useful.
+@usuario - «nos pasó exactamente esto en junio»
+> Lo que nos funcionó fue mover el pago fuera de la aprobación. Si te sirve,
+> te envío la redacción.
 
-QUESTION -> REEL
-@handle - "what do you do if they refuse to sign it?"
-  34 likes on this comment. That is a Reel, not a reply. Formula #16.
+PREGUNTA -> REEL
+@usuario - «¿qué hago si se niegan a firmar?»
+  34 me gusta: es un reel, no una respuesta. Fórmula 16.
 
-NOISE  (2)  skipped. Replying gives them reach.
-```
+RUIDO (2)  omitido.
+~~~
 
-Then the gate: nothing is posted until the user says yes. They paste the
-replies.
+Gate final: no se publica nada hasta que la persona dice que sí. La persona pega
+las respuestas.

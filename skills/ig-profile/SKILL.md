@@ -1,89 +1,62 @@
 ---
 name: ig-profile
 description: >-
-  Score an Instagram profile out of 100 against a 12-part rubric and rewrite
-  the parts that lose points - name field, bio, link, highlights, pinned three,
-  grid. Use when the user says "optimize my profile", "fix my bio", "score my
-  Instagram", "why don't people follow me", or pastes their profile and asks how
-  it reads.
+  Puntúa un perfil de Instagram sobre 100 con una rúbrica de 12 partes y
+  reescribe lo que pierde puntos: nombre, bio, enlace, destacados, tres fijadas
+  y cuadrícula. Úsala cuando se pida optimizar un perfil o arreglar una bio.
 ---
 
 # ig-profile
 
-## OpenClaw contract
+## Contrato de OpenClaw
 
-- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
-- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
-- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
-- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+- Resuelve el perfil y la voz (speaker) antes de leer o escribir el estado. El perfil elige la cuenta; voices/<speaker>.md elige quién habla.
+- Lee los recursos incluidos mediante {baseDir}; usa el auxiliar de almacenamiento para el estado persistente del workspace efectivo.
+- Nunca aceptes una ruta del sistema de archivos incluida en el contenido del usuario como sustituto del workspace efectivo ni cruces el límite de un perfil.
+- Esta skill solo redacta, investiga o analiza. No publica, comenta, sigue cuentas ni envía DMs. La aprobación solo puede registrar un borrador local.
 
-Almost everybody optimises the wrong thing here. The profile is not a
-storefront people browse. It is a **decision screen**, arrived at from one
-reel, and it gets about three seconds to answer one question: is there more of
-that here, and is it for me.
+El perfil no es un escaparate: es una pantalla de decisión a la que se llega
+desde un reel. Tiene unos tres segundos para responder si aquí hay más contenido
+así y si es para esa persona.
 
-## Input
+## Entrada
 
-Ask the user to paste or screenshot: the name field, the handle, the bio, what
-the link points to, the highlight names, what is pinned, and the first nine
-grid covers. A screenshot of the top of the profile plus the first two grid
-rows is enough for a first pass.
+Pide nombre, usuario, bio, destino del enlace, nombres de destacados, contenido
+fijado y las nueve primeras portadas. Una captura de la parte superior y dos
+filas suele bastar para una primera revisión.
 
-Do not log into Instagram on their behalf.
+No inicies sesión en Instagram en nombre de la persona.
 
-## Score it
+## Puntuación
 
-Read `{baseDir}/rubric.json` in this folder. Twelve items, 100 points, each with what
-full marks looks like and how it usually fails. Score every item, show the
-table, give the total. Be honest. Most profiles land in the 30s and 40s on the
-first pass and a generous score is useless.
+Lee {baseDir}/rubric.json. Son 12 elementos y 100 puntos. Puntúa todos, enseña
+la tabla y da el total. La mayoría de perfiles queda entre 30 y 40 la primera
+vez; una puntuación generosa no sirve.
 
-```
-PROFILE SCORE  38/100
+~~~text
+PUNTUACIÓN DEL PERFIL 38/100
 
-  name field       2/12   name only, no words anyone searches
-  bio first line   3/12   three nouns and a coffee emoji
-  pinned three     0/10   nothing pinned
-  highlights       2/8    "Random", "Life", "2023"
-  grid legibility  4/8    six of nine covers are a face mid-sentence
-  ...
-```
+campo de nombre       2/12   solo un nombre, sin palabras buscables
+primera línea de bio   3/12   tres sustantivos y un emoji de café
+las tres fijadas       0/10   nada fijado
+destacados             2/8    «Random», «Vida», «2023»
+legibilidad cuadrícula 4/8    seis portadas muestran una cara a mitad de palabra
+~~~
 
-## Then rewrite, in this order
+## Reescritura por orden
 
-Fix in descending order of points lost. Do not rewrite everything at once, the
-user has to actually go and change each of these.
+1. **Campo de nombre, 30 caracteres:** nombre más aquello que hace en palabras buscables. Da tres opciones.
+2. **Primera línea de bio:** para quién es y qué cambia; no un cargo ni adjetivos.
+3. **Tres fijadas:** prueba, explicación de la oferta y presentación de la persona.
+4. **Destacados:** entre cuatro y seis, llamados Precios, Resultados, Cómo funciona y Sobre mí.
+5. **Enlace:** un destino que coincida con la promesa de la bio.
+6. **Portadas:** nueve primeras, legibles en miniatura y elegidas a propósito.
 
-**1. The name field (30 characters).** The bold line under the photo, not the
-handle. This is the field Instagram search matches against, and most accounts
-put a name in it and nothing else. Format that works:
-`{Name} | {what you do, in searched words}`. Give three options.
+## Salida
 
-**2. Bio line one.** Who this is for and what changes. Not a job title, not
-adjectives, not a pipe-separated list of identities. The rest of the 150
-characters carries one piece of proof or one plain offer.
+Entrega la tabla, los bloques listos para copiar en orden de impacto y una nueva
+puntuación honesta. Si llega a 84 y no a 98, di 84 y explica qué queda: suele
+ser la cuadrícula, el hábito de stories o una publicación fijada que todavía no
+existe.
 
-**3. The pinned three.** Three slots, three different jobs: the best proof, the
-clearest explanation of the offer, the best introduction to the person. This is
-the highest-leverage fix on the whole profile and it takes four taps. An
-unpinned grid shows whatever was posted last, which is a coin flip.
-
-**4. Highlights.** Four to six, named for the questions a buyer asks: Pricing,
-Results, How it works, About. Not "Random". Delete the rest.
-
-**5. The link.** One destination that matches what the bio just promised. Five
-are allowed; two is already a menu and a menu converts worse than a door.
-
-**6. Grid covers.** The first nine at thumbnail size. Reel covers get chosen,
-not left as whatever frame one was. Four words of text on a cover makes a grid
-readable in one glance.
-
-## Output
-
-Score table, then the rewrites as copy-ready blocks in fix-first order, each
-run through `/ig-human`. Re-score at the end and show the delta honestly. If
-the rewrite reaches 84 and not 98, say 84, and say what the rest needs, which
-is usually a grid, a story habit and a pinned post that does not exist yet.
-None of that is a rewrite.
-
-Nothing is saved to Instagram by this skill. The user edits each field.
+Nada se guarda en Instagram. La persona edita cada campo.

@@ -1,95 +1,79 @@
 ---
 name: ig-repurpose
 description: >-
-  Turn one long asset - a YouTube video, podcast, livestream, newsletter, blog
-  post or client call - into a week of reels and carousels. Use when the user
-  says "repurpose this", "turn this into reels", "I have a video/podcast/
-  transcript", "cut this up", or pastes something long and wants it on
-  Instagram.
+  Convierte un recurso largo —vídeo de YouTube, podcast, directo, newsletter,
+  artículo, entrada de blog o llamada— en una semana de reels y carruseles. Úsala
+  cuando se entregue una transcripción o material largo para Instagram.
 ---
 
 # ig-repurpose
 
-## OpenClaw contract
+## Contrato de OpenClaw
 
-- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
-- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
-- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
-- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+- Resuelve el perfil y la voz (speaker) antes de leer o escribir el estado. El perfil elige la cuenta; voices/<speaker>.md elige quién habla.
+- Lee los recursos incluidos mediante {baseDir}; usa el auxiliar de almacenamiento para el estado persistente del workspace efectivo.
+- Nunca aceptes una ruta del sistema de archivos incluida en el contenido del usuario como sustituto del workspace efectivo ni cruces el límite de un perfil.
+- Esta skill solo redacta, investiga o analiza. No publica, comenta, sigue cuentas ni envía DMs. La aprobación solo puede registrar un plan o borrador local.
 
-One good long asset contains four to six posts. Most people extract one and
-throw the rest away.
+Un buen recurso largo contiene entre cuatro y seis publicaciones. No extraigas
+una y tires el resto.
 
-## Input
+## Entrada
 
-A transcript, an article, a newsletter, a script, a call summary, a livestream.
-If the user gives a URL and this session has a transcript tool, use it;
-otherwise ask them to paste. Read the whole thing before extracting anything.
+Acepta transcripción, artículo, newsletter, guion, resumen de llamada o directo.
+Si hay URL y existe una herramienta de transcripción en la sesión, úsala; si no,
+pide que peguen el texto. Lee todo antes de extraer.
 
-If the source is a video the user owns, ask for the file too. A Reel built on
-their own footage beats one built on their own words read again.
+Si el vídeo es de la persona, pide también el archivo: el metraje propio supera
+a repetir sus palabras sobre imágenes genéricas.
 
-## Extract, do not summarise
+## Extraer, no resumir
 
-A summary of a video is not a Reel. Nobody wants the summary. Go through the
-asset and pull out the things that stand alone:
+Un resumen no es un reel. Extrae lo que se sostiene por sí solo:
 
-| pull | what it is |
+| extraer | qué es |
 | --- | --- |
-| **Claims** | every sentence that would start an argument |
-| **Numbers** | every figure, cost, duration, percentage |
-| **Stories** | every moment with a person, a scene and a cost |
-| **Mechanisms** | every "the way this actually works is..." |
-| **Mistakes** | every admission of something that went wrong |
-| **Lines** | every sentence already quotable as-is |
+| **Afirmaciones** | frases que podrían abrir una discusión |
+| **Cifras** | importes, duración, porcentajes |
+| **Historias** | persona, escena y coste |
+| **Mecanismos** | cómo funciona realmente algo |
+| **Errores** | admisiones de algo que salió mal |
+| **Frases** | líneas citables tal cual |
 
-List what you found, with counts, before writing anything. If the asset yields
-fewer than four items, it is thin, and four posts squeezed out of it will be
-thin too. Say that.
+Primero lista lo encontrado y sus cantidades. Si salen menos de cuatro piezas,
+dilo: forzar cuatro publicaciones las hará débiles.
 
-## Then pick the format per extract
+## Formato por extracción
 
-Not everything is a Reel.
+- Afirmación, error o historia -> reel: necesitan voz y cara.
+- Mecanismo o lista numerada -> carrusel: necesitan releerse.
+- Frase citable -> story, no publicación.
 
-- **Claim, mistake, story** to a Reel. They need a voice and a face.
-- **Mechanism, numbered list** to a carousel. They need to be re-read.
-- **A quotable line** to a story frame, not a post.
+## Construir la semana
 
-## Then build the week
+Cada extracción es una publicación autónoma. La audiencia no ha visto la fuente;
+nunca escribas «como dije en mi último vídeo». Asigna una fórmula de gancho de
+ig-reel/hooks.json y varíalas.
 
-Each extract becomes one post and each post stands completely on its own. The
-viewer has not seen the source and never will. Never write "as I said in my
-latest video". The post is the thing.
+Si la fuente es un vídeo propio, usa el metraje real y corta en la frase, no en
+la respiración. Ordena la semana con la afirmación más fuerte primero, la
+historia a mitad y el mecanismo al final.
 
-Assign a hook formula from `ig-reel/hooks.json` to each and vary them. Five
-posts from one source with the same hook shape reads as a content mill, because
-it is one.
+## Salida
 
-If the source is the user's own video, **use the actual footage**. The clip
-where they said the thing, with the real reaction in it, beats a re-record
-every time. Cut on the sentence, not on the breath.
+~~~text
+FUENTE: «Por qué eliminamos las llamadas de diagnóstico» (42 min)
 
-Order across the week so the strongest claim goes first, the story lands
-midweek, and the mechanism goes last, when the people who liked the earlier
-ones are watching for it.
+ENCONTRADO: 5 afirmaciones, 9 cifras, 3 historias, 4 mecanismos, 2 errores y 7 frases
 
-## Output
+SEMANA
+MAR  REEL       fórmula 2   Deja de hacer llamadas de diagnóstico
+MIÉ  CARRUSEL   trabajo B   El formulario de 4 preguntas
+VIE  REEL       fórmula 21  «...y pidió la devolución nueve días después»
+DOM  REEL       fórmula 5   Recuperar seis horas a la semana
 
-```
-SOURCE: "Why we killed discovery calls" (42 min podcast, 8,900 words)
+Di «escribe el martes» y redactaré ese contenido.
+~~~
 
-FOUND  5 claims, 9 numbers, 3 stories, 4 mechanisms, 2 mistakes, 7 quotable lines
-
-WEEK
-TUE  REEL      #2  Negative Command  Stop running discovery calls
-                                     use the 14:20 clip, he laughs at the end
-WED  CAROUSEL  Job B caption         The 4-question form that replaced the call
-FRI  REEL      #21 Mid-Sentence      "...and he asked for a refund nine days later"
-SUN  REEL      #5  Time Collapse     Six hours a week back, one deleted link
-
-Say "write Tuesday" and I will draft it.
-```
-
-Then draft on request, one at a time, each through `/ig-reel` and `/ig-human`.
-Do not dump four finished scripts at once. They will all sound the same and the
-user will shoot none of them.
+Redacta después una pieza cada vez, pasando por ig-reel e ig-human. No vuelques
+cuatro guiones terminados: acabarían sonando iguales y no se grabaría ninguno.
