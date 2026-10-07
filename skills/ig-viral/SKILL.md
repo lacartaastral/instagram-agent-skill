@@ -12,13 +12,20 @@ description: >-
 
 # ig-viral
 
+## OpenClaw contract
+
+- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
+- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
+- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
+- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+
 The research skill. Everything else in this pack writes; this one goes and
 looks. Run it monthly, not daily. Formulas last a season.
 
 One tool lives in this folder and it runs:
 
 ```bash
-python3 swipe.py captured.tsv --out ~/.claude/instagram/swipe.md
+python3 {baseDir}/swipe.py captured.tsv --hooks {baseDir}/../ig-reel/hooks.json --out <resolved profile swipe.md>
 ```
 
 ## The one idea that makes this worth doing
@@ -37,7 +44,7 @@ works at 2M followers often works because it is at 2M followers.
 
 ## Step 1: pick the accounts
 
-Ask the user for 6 to 12 accounts, or propose them and get approval:
+Ask the user for a small approved set within the research limits in the selected profile platform-rules.json, or propose them and get approval:
 
 - **4 direct** - same niche, same offer, slightly ahead.
 - **4 adjacent** - different niche, same audience. This is where formats get
@@ -50,10 +57,7 @@ most relevant corpus that exists and it is already filtered by their taste.
 
 ## Step 2: go and look
 
-Use whatever browsing tool this session actually has: an in-app browser, a
-browser extension connected to the user's own Chrome, or a computer-use tool.
-There is no API for this and there does not need to be, because the volume is
-small enough to read.
+Use the OpenClaw browser capability only when it is actually available and the user is present. If browser is unavailable, ask for pasted observations or screenshots. Do not add a scraper, external service or background crawler.
 
 **Rules that are not negotiable:**
 
@@ -112,11 +116,11 @@ account	followers	median	views	hook
 ```
 
 ```bash
-python3 swipe.py captured.tsv --out ~/.claude/instagram/swipe.md
+python3 {baseDir}/swipe.py captured.tsv --hooks {baseDir}/../ig-reel/hooks.json --out <resolved profile swipe.md>
 ```
 
 It computes the outlier multiple, names the hook formula using the same 26
-formulas `/ig-reel` writes from, scores each hook with `hookscore.py`, and
+formulas the ig-reel skill writes from, scores each hook with `hookscore.py`, and
 prints what separates the top third from the bottom third.
 
 ## Step 4: say what it means, carefully
@@ -130,7 +134,7 @@ Report three things and no more:
    not: hook length, whether the payoff is visual, whether the first frame
    moves, where the ask is.
 3. **The unclassified rows.** Every hook the classifier could not name is
-   either noise or a formula that is not in `hooks.json` yet. Read them by
+   either noise or a formula that is not in `{baseDir}/../ig-reel/hooks.json` yet. Read them by
    hand. This is the most valuable column in the output and it is the reason
    the script prints the count.
 
@@ -141,7 +145,7 @@ difference between research and horoscopes.
 ## Step 5: turn it into something to shoot
 
 For the top three formulas, write **the user's version**: their own story,
-their own number, in the shape that is working. Hand each one to `/ig-reel`
+their own number, in the shape that is working. Hand each one to the ig-reel skill
 with the formula id already chosen.
 
 Never hand back "make a reel like this one". Hand back a hook line they could
@@ -171,8 +175,8 @@ YOUR VERSION
   ...
 ```
 
-Write the swipe file to `~/.claude/instagram/swipe.md`. `/ig-reel` and
-`/ig-plan` both read it, which is the point: after this runs once, the rest of
+Resolve swipe.md through shared/storage.py and write it only after the user requested the local artifact. The ig-reel and
+the ig-plan skill both read it, which is the point: after this runs once, the rest of
 the pack is working from the user's own evidence instead of from defaults.
 
 Nothing is posted, followed, liked or messaged by this skill. It reads.

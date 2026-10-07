@@ -10,6 +10,13 @@ description: >-
 
 # ig-dm
 
+## OpenClaw contract
+
+- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
+- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
+- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
+- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+
 Instagram DMs are the only place on the platform where money actually changes
 hands, and they are also where most accounts burn the goodwill their content
 earned. The difference is entirely about who moved first.

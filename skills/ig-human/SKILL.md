@@ -11,16 +11,23 @@ description: >-
 
 # ig-human
 
+## OpenClaw contract
+
+- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
+- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
+- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
+- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+
 Two tools live in this folder and they both actually run. Use them. Do not
 eyeball this.
 
 ```bash
-python3 humanize.py draft.txt --report        # clean it, show what changed
-python3 detect.py draft.txt                    # score it, five checks
-python3 detect.py before.txt after.txt         # prove the delta
+python3 {baseDir}/humanize.py draft.txt --report        # clean it, show what changed
+python3 {baseDir}/detect.py draft.txt                    # score it, five checks
+python3 {baseDir}/detect.py before.txt after.txt         # prove the delta
 ```
 
-Both read `slop.json`: 154 stock words and phrases with plain-English
+Both read `{baseDir}/slop.json`: 154 stock words and phrases with plain-English
 replacements, 18 invisible character classes, 11 typographic substitutions and
 16 structural tells. The last block of each list is Instagram-specific, the
 vocabulary that only shows up in captions and voiceovers. It is meant to be

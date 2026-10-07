@@ -9,6 +9,13 @@ description: >-
 
 # ig-comment
 
+## OpenClaw contract
+
+- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
+- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
+- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
+- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+
 Commenting is the highest-leverage twenty minutes on Instagram and the easiest
 to do badly. A comment near the top of a reel with 40,000 views is seen by more
 people than most accounts' own posts, and it is the one place where a stranger
@@ -82,7 +89,7 @@ Post the first. It concedes something and it has a number in it.
 
 For an engagement round, ask for the 5 to 10 posts as pasted text in one
 message, return one comment each in a single block, and keep a running note in
-`~/.claude/instagram/log.md` of who has been commented on this week.
+`<OPENCLAW_WORKSPACE>/state/instagram-agent/profiles/<profile>/log.md` of who has been commented on this week.
 Commenting on the same three accounts every day is visible and it looks like
 exactly what it is.
 

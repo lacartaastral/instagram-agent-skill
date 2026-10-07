@@ -1,30 +1,28 @@
-# voice.md
+# Speaker voice template
 
-Copy this to `~/.claude/instagram/voice.md` and fill it in. Every skill in the
-pack reads it. Ten minutes here is the difference between scripts you shoot and
-scripts you rewrite.
+Store one copy at
+<OPENCLAW_WORKSPACE>/state/instagram-agent/profiles/<profile>/voices/<speaker>.md.
+The profile owns the account and brand context; this file owns only how one
+speaker communicates. Do not put factual knowledge, offers or platform rules
+here.
 
-If you would rather not fill it in by hand, send Claude three of your own reels
-or captions and say "write my voice.md from these". That works better than
-guessing at the answers.
-
-This file matters more on Instagram than anywhere else, because you have to say
-the words out loud. A line you would never say is not a draft, it is a retake.
+If the speaker profile is missing, ask for three real reels or captions and
+explicitly label any inferred preference as provisional. Never invent proof,
+clients, numbers or claims.
 
 ---
 
 ## Who I am
 
 - **Name:**
-- **Handle:**
-- **What I do, in one sentence:**
-- **Who I am talking to:** (be specific: "photographers charging under $2,000",
-  not "creatives")
-- **What I sell:**
+- **Speaker id:**
+- **Relationship to the profile/brand:**
+- **Who I am talking to:**
+- **Topics I can speak about:**
 
 ## What I sound like
 
-- **Three of my own reels or captions that sound most like me:** (paste them)
+- **Three real reels or captions that sound like me:**
 - **On camera I am:** (fast and loud / dry / calm / funny / deadpan)
 - **Words I actually use:**
 - **Words I would never say out loud:**
@@ -32,13 +30,11 @@ the words out loud. A line you would never say is not a draft, it is a retake.
 - **Emoji in captions:** (never / one, rarely / freely)
 - **Face on camera:** (always / sometimes / faceless)
 - **Voiceover or to-camera:**
-- **Pace:** (words per minute, if you have timed yourself reading a script.
-  `beats.py --wpm` uses this. Most people are between 150 and 200.)
+- **Pace:** (words per minute, if known; beats.py can use it)
 
 ## My positions
 
-Three to five things I believe that some of my audience does not. These are
-where the good reels come from.
+Three to five things I believe that some of the audience does not.
 
 1.
 2.
@@ -47,21 +43,12 @@ where the good reels come from.
 ## Off limits
 
 - **Topics I do not post about:**
-- **Clients, numbers or names I cannot say publicly:**
-- **Claims I am not allowed to make:** (regulated industry, employer policy, NDA)
+- **People, clients, numbers or names I cannot say publicly:**
+- **Claims I am not allowed to make:**
 
-## Proof I can use
+## Delivery preferences
 
-Real numbers, outcomes and stories I am happy to put my name on. The skills will
-never invent one, so if this section is empty, every draft comes back with
-`{{your number}}` in it.
-
--
--
--
-
-## The ask
-
-- **My keyword CTA, if I use one:** (one word, sayable, no spaces)
-- **What the keyword sends them:**
-- **Where my link goes:**
+- **Sentence length:**
+- **How direct I am:**
+- **How I handle uncertainty:**
+- **Words that must stay exactly as written:**

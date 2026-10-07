@@ -10,6 +10,13 @@ description: >-
 
 # ig-repurpose
 
+## OpenClaw contract
+
+- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
+- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
+- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
+- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+
 One good long asset contains four to six posts. Most people extract one and
 throw the rest away.
 

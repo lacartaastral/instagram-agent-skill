@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "scope": "generic-instagram-profile",
+  "verified_at": "2026-10-07",
+  "verification_status": "baseline_snapshot_not_independently_verified",
+  "source": "Upstream baseline d03c56bb598be770c60b201f94237e5d1a4268a6; verify against current Instagram documentation before relying on a mutable value.",
+  "rules": {
+    "caption": {
+      "max_characters": {
+        "value": 2200,
+        "verified": false,
+        "verified_at": null,
+        "source": "upstream baseline claim",
+        "notes": "Treat as a warning until independently verified."
+      },
+      "feed_preview_characters": {
+        "value": 125,
+        "verified": false,
+        "verified_at": null,
+        "source": "upstream baseline approximation",
+        "notes": "Device, font and line wrapping can change the visible cut."
+      },
+      "hashtag_max_per_post": {
+        "value": 5,
+        "verified": false,
+        "verified_at": null,
+        "source": "upstream baseline claim",
+        "notes": "Do not present this as a current platform fact until verified."
+      }
+    },
+    "reel": {
+      "recommended_duration_seconds": {
+        "value": {"min": 15, "max": 45},
+        "verified": false,
+        "verified_at": null,
+        "source": "upstream baseline editorial heuristic",
+        "notes": "A recommendation, not a platform requirement."
+      },
+      "maximum_duration_seconds": {
+        "value": 180,
+        "verified": false,
+        "verified_at": null,
+        "source": "upstream baseline claim",
+        "notes": "Verify before using for production planning."
+      },
+      "safe_zone": {
+        "value": {"canvas_width": 1080, "canvas_height": 1920, "top_clear_px": 230, "bottom_content_start_px": 1440, "right_clear_px": 230},
+        "verified": false,
+        "verified_at": null,
+        "source": "upstream baseline editorial guidance",
+        "notes": "UI overlays and placements change; keep this configurable."
+      }
+    },
+    "carousel": {
+      "canvas": {
+        "value": {"width": 1080, "height": 1350, "aspect_ratio": "4:5"},
+        "verified": false,
+        "verified_at": null,
+        "source": "upstream baseline claim",
+        "notes": "Verify current upload dimensions and crop behavior."
+      },
+      "maximum_items": {
+        "value": 20,
+        "verified": false,
+        "verified_at": null,
+        "source": "upstream baseline claim",
+        "notes": "Use a warning when unverified."
+      }
+    },
+    "story": {
+      "canvas": {
+        "value": {"width": 1080, "height": 1920, "top_clear_px": 250, "bottom_content_start_px": 1600},
+        "verified": false,
+        "verified_at": null,
+        "source": "upstream baseline editorial guidance",
+        "notes": "Treat safe-zone values as a review aid, not a guarantee."
+      }
+    },
+    "research": {
+      "max_accounts_per_manual_batch": {
+        "value": 10,
+        "verified": true,
+        "verified_at": "2026-10-07",
+        "source": "fork governance decision",
+        "notes": "Local safety boundary: human-sized research only; never a crawler."
+      },
+      "max_reels_per_account_per_batch": {
+        "value": 12,
+        "verified": true,
+        "verified_at": "2026-10-07",
+        "source": "fork governance decision",
+        "notes": "Local safety boundary, not an Instagram platform limit."
+      }
+    }
+  }
+}

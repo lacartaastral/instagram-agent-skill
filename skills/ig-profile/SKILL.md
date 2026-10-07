@@ -10,6 +10,13 @@ description: >-
 
 # ig-profile
 
+## OpenClaw contract
+
+- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
+- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
+- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
+- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+
 Almost everybody optimises the wrong thing here. The profile is not a
 storefront people browse. It is a **decision screen**, arrived at from one
 reel, and it gets about three seconds to answer one question: is there more of
@@ -26,7 +33,7 @@ Do not log into Instagram on their behalf.
 
 ## Score it
 
-Read `rubric.json` in this folder. Twelve items, 100 points, each with what
+Read `{baseDir}/rubric.json` in this folder. Twelve items, 100 points, each with what
 full marks looks like and how it usually fails. Score every item, show the
 table, give the total. Be honest. Most profiles land in the 30s and 40s on the
 first pass and a generous score is useless.

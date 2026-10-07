@@ -10,6 +10,13 @@ description: >-
 
 # ig-audit
 
+## OpenClaw contract
+
+- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
+- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
+- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
+- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+
 The only honest source of what works for an account is that account. Every
 rule in every Instagram guide, including the ones in this pack, is a prior.
 The user's own last 30 posts are the evidence.
@@ -24,8 +31,7 @@ Ask for whichever the user has:
   screenshot is worth more than the rest combined.
 - Or just the posts and their view counts, which is enough for a first pass.
 
-Also read `~/.claude/instagram/log.md` if it exists, since it records which
-hook formula each post used.
+Resolve the selected profile log.md with shared/storage.py and read it only if it exists. It records which hook formula each post used; never read another profile.
 
 ## What to actually measure
 
@@ -69,7 +75,7 @@ better than inventing one.
 **A reel that gets views and no follows is not a failed reel, it is a profile
 problem.** A reel that gets no views is a hook problem. Separate the two before
 recommending anything. If non-follower reach is high and follows per reach is
-low, stop rewriting hooks and go to `/ig-profile`.
+low, stop rewriting hooks and go to the ig-profile skill.
 
 ## Output
 
@@ -99,6 +105,6 @@ STOP: listicles.
 DO MORE: the ones with a cost you paid and a number attached.
 ```
 
-Then hand the conclusions to `/ig-plan` so next week is built on the user's own
-evidence rather than on defaults, and to `/ig-viral` so the swipe file gets
+Then hand the conclusions to the ig-plan skill so next week is built on the user's own
+evidence rather than on defaults, and to the ig-viral skill so the swipe file gets
 filtered to the formulas that work for this account specifically.

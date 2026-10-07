@@ -11,32 +11,39 @@ description: >-
 
 # ig-reel
 
+## OpenClaw contract
+
+- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
+- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
+- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
+- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+
 Turns one raw idea into a Reel that somebody finishes.
 
 Two tools live in this folder and they both actually run. Use them. Do not
 eyeball the hook and do not guess at the length.
 
 ```bash
-python3 hookscore.py hooks.txt              # rank your hook options
-python3 hookscore.py --hook "one line"      # score a single one
-python3 beats.py script.txt --target 30     # timed beat sheet before you shoot
+python3 {baseDir}/hookscore.py hooks.txt              # rank your hook options
+python3 {baseDir}/hookscore.py --hook "one line"      # score a single one
+python3 {baseDir}/beats.py script.txt --target 30     # timed beat sheet before you shoot
 ```
 
 ## Before you write
 
-1. Read `~/.claude/instagram/voice.md` if it exists. That is the user's voice
+1. Read `<OPENCLAW_WORKSPACE>/state/instagram-agent/profiles/<profile>/voices/<speaker>.md` if it exists. That is the user's voice
    profile: how they talk on camera, what they never say, who they are talking
    to. If it does not exist, ask for **three of their own reels**, transcribe or
    read them, infer the voice, and write the file. A script in the wrong voice
    is unusable, because they have to say it out loud.
-2. Read `hooks.json` in this folder. 26 formulas, each with a template, a filled
+2. Read `{baseDir}/hooks.json` in this folder. 26 formulas, each with a template, a filled
    example, the on-screen version, what it is for, and how it gets ruined.
    Four of them are in there because they kept turning up in real hooks, not
    because they completed a pattern.
 3. If the idea is thin, do not pad it. Ask one batched question: what happened,
    to whom, and what did it cost or return. A Reel needs one specific true
    thing. Get it before writing.
-4. If `~/.claude/instagram/swipe.md` exists, read it. `/ig-viral` writes that
+4. If `<OPENCLAW_WORKSPACE>/state/instagram-agent/profiles/<profile>/swipe.md` exists, read it. the ig-viral skill writes that
    file, and it is the user's own evidence about which formulas are working in
    their niche right now. It beats the defaults in this file.
 
@@ -53,29 +60,27 @@ LAST 3s       THE PAYOFF  deliver what the hook promised, then the single ask.
 LAST LINE     THE LOOP    echo one word from the hook so the replay lands clean.
 ```
 
-Length: 15 to 45 seconds is the working range. Reels run to 3 minutes and
-almost nobody should use it. Under 7 seconds the loop counts inflate and
-nothing else does.
+Length is an editorial choice. Read the selected profile platform-rules.json for current duration guidance; unverified values are review aids, not platform facts.
 
 ## The loop
 
-**1. Pick three hooks, not one.** Run the idea through `hooks.json`, choose
+**1. Pick three hooks, not one.** Run the idea through `{baseDir}/hooks.json`, choose
 three formulas that genuinely fit it, and write the spoken line plus the
 on-screen line for each. Different formulas, not three rewrites of one.
 
 **2. Score them.** Put the three spoken lines in a file, one per line, and run
-`hookscore.py`. Show the user the ranking. If the top one is under 50, you do
+`python3 {baseDir}/hookscore.py`. Show the user the ranking. If the top one is under 50, you do
 not have the hook yet and no amount of editing fixes that.
 
 **3. Write the script** on the winning hook. Plain spoken language, the way the
 user actually talks. Contractions. Short lines. No sentence they would have to
 rehearse.
 
-**4. Time it.** Run `beats.py script.txt --target {length}`. Fix every flag:
+**4. Time it.** Run `python3 {baseDir}/beats.py script.txt --target {length}`. Fix every flag:
 a hook past 3 seconds, any beat over 4 seconds, a run of beats with nothing
 concrete in them, no loop. Re-run until it is clean.
 
-**5. Humanize it.** Run the script through `/ig-human` before showing it. A
+**5. Humanize it.** Run the script through the ig-human skill before showing it. A
 written-sounding line is obvious the moment someone says it out loud.
 
 **6. Print the block.** The script in a fenced block, the on-screen text as a
@@ -93,8 +98,7 @@ Reply "yes" to log it, or tell me what to change.
 ```
 
 **7. Never publish.** This skill produces a script. The user shoots it and
-posts it. On "yes", append to `~/.claude/instagram/log.md` with the date, the
-hook formula used and the first line, so `/ig-audit` has a history later.
+posts it. On explicit approval, resolve log.md with shared/storage.py and append the date, hook formula and first line. This is a local registration only; it never publishes.
 
 ## On-screen text is a separate script
 

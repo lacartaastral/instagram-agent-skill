@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/instagram-agent-openclaw/platform-rules.schema.json",
+  "title": "Instagram Agent OpenClaw platform rules",
+  "type": "object",
+  "required": ["schema_version", "rules"],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "scope": {"type": "string"},
+    "verified_at": {"type": ["string", "null"]},
+    "verification_status": {"type": "string"},
+    "source": {"type": "string"},
+    "rules": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "required": ["value", "verified", "verified_at", "source", "notes"],
+          "properties": {
+            "value": {},
+            "verified": {"type": "boolean"},
+            "verified_at": {"type": ["string", "null"]},
+            "source": {"type": "string"},
+            "notes": {"type": "string"}
+          },
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

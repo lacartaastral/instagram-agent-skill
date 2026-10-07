@@ -9,12 +9,19 @@ description: >-
 
 # ig-plan
 
+## OpenClaw contract
+
+- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
+- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
+- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
+- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+
 The control room. Everything else in this pack executes; this decides what gets
 executed. Run it once a week, on the same day.
 
 ## Input
 
-If `~/.claude/instagram/voice.md`, `swipe.md` and `log.md` exist, read them.
+Read the selected profile brand.md, facts.md, offers.md, voices/<speaker>.md, swipe.md and log.md through shared/storage.py when they exist.
 The swipe file is the user's own evidence from `/ig-viral` about which formulas
 are landing in their niche right now, and it outranks anything in this file.
 The log stops the plan repeating a theme from the last fortnight.
@@ -29,10 +36,7 @@ If they do not exist, ask for four things and write them down:
 
 ## What to post
 
-Four to five posts a week, and at least three of them Reels. Reels are the only
-format on Instagram that reliably reaches people who do not follow the account.
-Carousels go deep with the people who already do. Stories are daily and are
-planned separately.
+Use the profile facts and recent evidence to choose a sustainable cadence. Do not present feed-distribution claims as current facts; consult platform-rules.json and the account audit first.
 
 Mix across the week, never two of the same type back to back:
 
@@ -72,7 +76,7 @@ Anchor times to the audience's timezone, not the user's, if those differ.
 - **2 buyers** - people who could actually buy. Comment for weeks before any
   DM, and never pitch in a comment.
 
-Hand the list to `/ig-comment`.
+Hand the list to the ig-comment skill.
 
 ## Output
 
@@ -95,6 +99,6 @@ ENGAGE  (5 reach / 3 peers / 2 buyers)
 Say "write Tuesday" and I will draft it.
 ```
 
-Write the plan to `~/.claude/instagram/plan.md` so the other skills can read
+Resolve plan.md with shared/storage.py and write it only when the user requests local registration, so the other skills can read
 it. Nothing is scheduled or posted anywhere. This is a plan and the user runs
 it.

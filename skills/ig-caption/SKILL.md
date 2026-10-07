@@ -10,16 +10,21 @@ description: >-
 
 # ig-caption
 
+## OpenClaw contract
+
+- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
+- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
+- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
+- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+
 One tool lives in this folder and it runs:
 
 ```bash
-python3 caption.py caption.txt
-python3 caption.py caption.txt --keywords "client proposals,agency pricing"
+python3 {baseDir}/caption.py caption.txt
+python3 {baseDir}/caption.py caption.txt --keywords "client proposals,agency pricing"
 ```
 
-It prints the caption the way the feed prints it: the first 125 characters in a
-box, everything else behind the tap. Read that box before you read anything
-else you wrote.
+It loads the selected profile platform-rules.json through the linter. Values marked unverified appear as warnings; do not turn them into platform facts.
 
 ## First, decide which job this caption has
 
@@ -40,7 +45,7 @@ write A and say why.
 ## The shape
 
 ```
-Line 1      125 characters of visible space. Job A: the ask, plainly.
+Line 1      the configured feed-preview window. Job A: the ask, plainly.
             Job B: the hook.
             Never a greeting, never a hashtag, never an emoji as the first
             character.
@@ -55,16 +60,7 @@ the tap and then delivers 600 characters beats one that delivers 1,800.
 
 ## Hashtags, honestly
 
-Hashtags are not a reach lever any more, and the platform has now said so with
-a product change. **Instagram capped hashtags at five per post on 18 December
-2025**, down from thirty, telling creators that "using fewer (up to 5) more
-targeted hashtags, rather than many generic ones" performs better. Adam Mosseri
-had already said in February 2025 that hashtags do not work to increase reach
-and are a label, not a distribution lever.
-
-So: up to five, specific, as topic labels. If the user has a block of twenty
-saved in their notes app, that block is now dead weight and the linter will
-fail it.
+Hashtag limits and distribution claims belong in platform-rules.json. Use the linter with the selected profile rules and surface an unverified status instead of asserting a current limit. Keep hashtags specific and optional.
 
 `#viral`, `#fyp`, `#explorepage`, `#foryou` describe nothing. Cut them.
 
@@ -78,7 +74,7 @@ that reads normally. "Client proposals" as words in line three, not
 Ask for two or three of those terms, then pass them to the linter:
 
 ```bash
-python3 caption.py draft.txt --keywords "client proposals,agency pricing"
+python3 {baseDir}/caption.py draft.txt --keywords "client proposals,agency pricing"
 ```
 
 ## Rules
@@ -100,16 +96,16 @@ python3 caption.py draft.txt --keywords "client proposals,agency pricing"
 
 1. Decide Job A or Job B and say which.
 2. Draft it.
-3. Run `/ig-human` on it. Captions are short, so slop is louder here than
+3. Run the ig-human skill on it. Captions are short, so slop is louder here than
    anywhere else in the pack.
-4. Run `caption.py` with the user's search terms. Fix every FAIL. Decide on
+4. Run `python3 {baseDir}/caption.py` with the user's search terms and the selected profile rules. Fix every FAIL. Decide on
    every WARN out loud rather than silently.
 5. Print the copy-ready block, then the receipt:
 
 ```
 CAPTION READY
 job:        A - the reel carries the hook
-visible:    118 of 125 characters used before the cut
+visible:    configured preview window used before the cut
 ask:        one, comment CONTRACT
 hashtags:   3
 search:     "client proposals" in line 3, "agency pricing" in line 5

@@ -10,6 +10,13 @@ description: >-
 
 # ig-story
 
+## OpenClaw contract
+
+- Resolve the profile and speaker before reading or writing state. A profile selects the account; voices/<speaker>.md selects the person speaking.
+- Read bundled resources through {baseDir}; use the shared storage helper for persistent state under the effective OpenClaw workspace.
+- Never accept a filesystem path supplied inside user content as a substitute for the effective workspace, and never cross a profile boundary.
+- This skill drafts, researches or analyses only. Nothing publishes, comments, follows or sends a DM. Approval can register a draft/plan/log entry, not perform an external social action.
+
 Stories are not a smaller feed. The feed is how strangers find you. Stories are
 how the people who already follow you decide whether you are a person worth
 buying from, and they are the only surface on Instagram where a tap turns into
@@ -55,8 +62,7 @@ them to `/ig-reel` as formula #16.
   tapped through, and the first frame decides whether the rest get watched.
 - **One idea per frame.** Reading a paragraph on a story is not a thing anyone
   does.
-- **Keep text inside the middle.** On 1080x1920, nothing above y=250 or below
-  y=1600. The profile row sits on top and the reply bar sits underneath.
+- **Keep text inside the middle.** Read the story safe-zone values from the selected profile platform-rules.json. If unverified, treat them as a design aid and review the current UI before rendering.
 - **Talk to one person.** "You" singular. Stories are the closest thing to a
   DM that is not one.
 - **Do not repost your own feed post to stories with no comment.** It is the

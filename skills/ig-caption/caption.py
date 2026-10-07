@@ -26,14 +26,17 @@ import json
 import re
 import sys
 import textwrap
+from pathlib import Path
 
-LIMIT = 2200             # Instagram's hard caption limit.
-TRUNCATE = 125           # Roughly where the feed cuts to "... more".
-HASHTAG_LIMIT = 5        # Instagram's cap per post or reel since 18 Dec 2025,
-                         # down from 30. Announced by the @Creators account:
-                         # "using fewer (up to 5) more targeted hashtags,
-                         # rather than many generic ones, can improve both your
-                         # content's performance and people's experience".
+REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+from shared.platform_rules import load_rules, rule_value, rule_verified
+
+DEFAULT_RULES = load_rules()
+LIMIT = int(rule_value(DEFAULT_RULES, "caption.max_characters", 2200))
+TRUNCATE = int(rule_value(DEFAULT_RULES, "caption.feed_preview_characters", 125))
+HASHTAG_LIMIT = int(rule_value(DEFAULT_RULES, "caption.hashtag_max_per_post", 5))
 
 HASHTAG_RE = re.compile(r"(?:^|\s)(#[A-Za-z0-9_]+)")
 MENTION_RE = re.compile(r"(?:^|\s)(@[A-Za-z0-9_.]+)")
@@ -76,8 +79,17 @@ def render_box(window, truncated, out=sys.stdout, width=52):
     print("  +" + "-" * (width + 2 - len(tail) - 2) + f" {tail} " + "+", file=out)
 
 
-def analyse(text, cut=TRUNCATE, keywords=None):
+def analyse(text, cut=None, keywords=None, rules=None):
     text = text.rstrip()
+    rules = rules or DEFAULT_RULES
+    limit = int(rule_value(rules, "caption.max_characters", LIMIT))
+    truncate_at = int(cut if cut is not None else rule_value(rules, "caption.feed_preview_characters", TRUNCATE))
+    hashtag_limit = rule_value(rules, "caption.hashtag_max_per_post", HASHTAG_LIMIT)
+    hashtag_limit = int(hashtag_limit) if hashtag_limit is not None else None
+    limit_verified = rule_verified(rules, "caption.max_characters")
+    truncate_verified = rule_verified(rules, "caption.feed_preview_characters")
+    hashtag_limit_verified = rule_verified(rules, "caption.hashtag_max_per_post")
+    cut = truncate_at
     stripped = text.strip()
     chars = len(stripped)
     lines = [l for l in stripped.split("\n")]
@@ -97,9 +109,11 @@ def analyse(text, cut=TRUNCATE, keywords=None):
     def add(name, status, detail):
         checks.append({"check": name, "status": status, "detail": detail})
 
-    add("LENGTH", "FAIL" if chars > LIMIT else "PASS",
-        f"{chars} / {LIMIT} characters" + (f", {chars - LIMIT} over the limit"
-                                           if chars > LIMIT else ""))
+    add("LENGTH", "FAIL" if chars > limit else "WARN" if not limit_verified else "PASS",
+        f"{chars} / {limit} characters" + (f", {chars - limit} over the configured limit"
+                                           if chars > limit else ""))
+    if not limit_verified:
+        checks[-1]["detail"] += " (rule unverified)"
 
     if not first_line:
         add("FIRST LINE", "FAIL", "the caption opens on a blank line")
@@ -117,17 +131,21 @@ def analyse(text, cut=TRUNCATE, keywords=None):
         f"{len(CONCRETE_RE.findall(window))} number(s) or name(s) in the visible window"
         + ("" if CONCRETE_RE.search(window) else " - nothing checkable before the tap"))
 
-    if len(tags) > HASHTAG_LIMIT:
-        add("HASHTAGS", "FAIL", f"{len(tags)} tags, over Instagram's cap of {HASHTAG_LIMIT}. "
-                                "Tags past the fifth do not count and the block reads as old")
-    elif len(tags) == HASHTAG_LIMIT and filler:
-        add("HASHTAGS", "WARN", f"{len(tags)} tags, at the cap, and "
-                                f"{len(filler)} of them generic. Spend the five on topics")
+    if hashtag_limit is None:
+        add("HASHTAGS", "WARN", f"{len(tags)} tags; the maximum is not configured")
+    elif len(tags) > hashtag_limit:
+        status = "WARN" if not hashtag_limit_verified else "FAIL"
+        add("HASHTAGS", status, f"{len(tags)} tags, over the configured cap of {hashtag_limit}. "
+                                "Verify the rule before treating this as a hard failure")
+    elif len(tags) == hashtag_limit and filler:
+        add("HASHTAGS", "WARN", f"{len(tags)} tags, at the configured cap, and "
+                                f"{len(filler)} of them generic. Spend the available tags on topics")
     elif filler:
-        add("HASHTAGS", "WARN", f"{len(tags)} tags, {len(filler)} of them generic "
-                                f"({', '.join(filler[:3])}). Those describe nothing")
+        add("HASHTAGS", "WARN", f"{len(tags)} tag(s), {len(filler)} generic" + (f": {' '.join(tags)}" if tags else ""))
     else:
-        add("HASHTAGS", "PASS", f"{len(tags)} tag(s)" + (f": {' '.join(tags)}" if tags else ""))
+        add("HASHTAGS", "WARN" if not hashtag_limit_verified else "PASS", f"{len(tags)} tag(s)" + (f": {' '.join(tags)}" if tags else ""))
+        if not hashtag_limit_verified:
+            checks[-1]["detail"] += " (maximum rule unverified)"
 
     if not tags:
         add("TAG PLACEMENT", "PASS", "no tags to place")
@@ -170,7 +188,13 @@ def analyse(text, cut=TRUNCATE, keywords=None):
     verdict = "FIX" if fails else ("REVIEW" if warns else "READY")
 
     return {
-        "characters": chars, "limit": LIMIT, "truncate_at": cut,
+        "characters": chars, "limit": limit, "truncate_at": cut,
+        "rules": {
+            "max_characters_verified": limit_verified,
+            "feed_preview_verified": truncate_verified,
+            "hashtag_limit": hashtag_limit,
+            "hashtag_limit_verified": hashtag_limit_verified,
+        },
         "visible": window, "truncated": truncated,
         "first_line_chars": len(first_line),
         "hashtags": tags, "mentions": mentions, "links": links,
@@ -195,14 +219,16 @@ def render(a, out=sys.stdout):
 def main():
     ap = argparse.ArgumentParser(description="Lint an Instagram caption.")
     ap.add_argument("input", nargs="?", default="-", help="caption file, or - for stdin")
-    ap.add_argument("--truncate", type=int, default=TRUNCATE,
-                    help=f"characters shown before '... more' (default {TRUNCATE})")
+    ap.add_argument("--truncate", type=int, default=None,
+                    help="characters shown before '... more' (default from platform rules)")
+    ap.add_argument("--rules", help="profile platform-rules.json overlay")
     ap.add_argument("--keywords", default="", help="comma-separated terms you want to be found for")
     ap.add_argument("--json", action="store_true")
     args = ap.parse_args()
 
     raw = sys.stdin.read() if args.input == "-" else open(args.input, encoding="utf-8").read()
-    a = analyse(raw, cut=args.truncate, keywords=args.keywords.split(","))
+    rules = load_rules(args.rules) if args.rules else DEFAULT_RULES
+    a = analyse(raw, cut=args.truncate, keywords=args.keywords.split(","), rules=rules)
     if args.json:
         print(json.dumps(a, indent=2, ensure_ascii=False))
     else:

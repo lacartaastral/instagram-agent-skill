@@ -21,7 +21,7 @@ If you only have `followers`, leave median out and the script says so.
 
 Usage
   python3 swipe.py captured.tsv
-  python3 swipe.py captured.tsv --out ~/.claude/instagram/swipe.md
+  python3 swipe.py captured.tsv --out <resolved profile swipe.md>
   python3 swipe.py captured.tsv --json
 """
 
@@ -45,7 +45,8 @@ except Exception:                                 # ig-viral copied on its own
 
 def load_formulas(path):
     try:
-        d = json.load(open(path, encoding="utf-8"))
+        with open(path, encoding="utf-8") as handle:
+            d = json.load(handle)
     except Exception:
         return None
     by_id = {h["id"]: h for h in d["hooks"]}
@@ -64,7 +65,11 @@ def classify(hook, formulas):
 
 
 def read_rows(path):
-    raw = sys.stdin.read() if path == "-" else open(path, encoding="utf-8").read()
+    if path == "-":
+        raw = sys.stdin.read()
+    else:
+        with open(path, encoding="utf-8") as handle:
+            raw = handle.read()
     lines = [l for l in raw.splitlines() if l.strip() and not l.lstrip().startswith("#")]
     if not lines:
         return []
@@ -198,7 +203,8 @@ def main():
     if args.out:
         path = os.path.expanduser(args.out)
         os.makedirs(os.path.dirname(path), exist_ok=True)
-        open(path, "w", encoding="utf-8").write(to_markdown(a))
+        with open(path, "w", encoding="utf-8") as handle:
+            handle.write(to_markdown(a))
         print(f"wrote {path}", file=sys.stderr)
 
 
